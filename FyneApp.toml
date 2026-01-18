@@ -1,0 +1,11 @@
+Website = "https://github.com/heathcliff26/cultures-trainer"
+
+[Details]
+#Icon = "packages/io.github.heathcliff26.cultures-trainer.png"
+Name = "cultures-trainer"
+ID = "com.github.heathcliff26.cultures-trainer"
+Version = "0.0.1"
+Build = 1
+
+[Migrations]
+fyneDo = true
