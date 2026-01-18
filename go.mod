@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	fyne.io/fyne/v2 v2.7.2
 	github.com/go-openapi/testify/v2 v2.1.8
-	golang.org/x/sys v0.30.0
+	golang.org/x/sys v0.40.0
 )
 
 require (
