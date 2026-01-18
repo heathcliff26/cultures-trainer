@@ -1,0 +1,27 @@
+# See the documentation for more information:
+# https://packit.dev/docs/configuration/
+
+specfile_path: tmp/cultures-trainer.spec
+actions:
+  post-upstream-clone:
+    - mkdir -p tmp
+    - cp tools/cultures-trainer.spec tmp/
+
+# name in upstream package repository or registry (e.g. in PyPI)
+upstream_package_name: cultures-trainer
+# downstream (Fedora) RPM package name
+downstream_package_name: cultures-trainer
+
+jobs:
+  - job: copr_build
+    trigger: pull_request
+    branch: main
+    targets:
+      - fedora-all-x86_64
+
+  - job: copr_build
+    trigger: release
+    targets:
+      - fedora-all-x86_64
+    owner: heathcliff26
+    project: games

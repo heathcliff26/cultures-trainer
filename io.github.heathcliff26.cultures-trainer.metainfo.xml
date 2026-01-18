@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>io.github.heathcliff26.cultures-trainer</id>
+
+    <name>Cultures Trainer</name>
+    <summary>Resource Cheat Trainer for Cultures</summary>
+
+    <metadata_license>MIT</metadata_license>
+    <project_license>Apache-2.0</project_license>
+
+    <description>
+        <p>This Trainer is for the german version of the game. Hence the german resource names. Currently only tested with Northland, should also work with 8th Wonder of the World.</p>
+    </description>
+
+    <url type="homepage">https://github.com/heathcliff26/cultures-trainer</url>
+    <developer id="io.github.heathcliff26">
+        <name>Heathcliff</name>
+    </developer>
+
+    <content_rating type="oars-1.1" />
+
+    <launchable type="desktop-id">io.github.heathcliff26.cultures-trainer.desktop</launchable>
+
+    <branding>
+        <color type="primary" scheme_preference="light">#023c8a</color>
+        <color type="primary" scheme_preference="dark">#03228a</color>
+    </branding>
+
+    <!-- <screenshots>
+    TODO
+    </screenshots> -->
+
+</component>

@@ -1,0 +1,13 @@
+# Generated go-test coverage reports
+coverprofiles/
+coverprofile.out
+
+# Generated artifacts
+/bin
+/dist
+/fyne-cross
+
+# Packit RPM builds
+/tmp
+/x86_64
+/aarch64

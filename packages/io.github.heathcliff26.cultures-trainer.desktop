@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+
+Name=Cultures Trainer
+Comment=Cheat Trainer for Cultures Northland and 8th Wonder of the World
+Categories=Utility;
+Keywords=cultures games northland 8th wonder of the world trainer;
+
+Icon=io.github.heathcliff26.cultures-trainer
+Exec=cultures-trainer
+Terminal=false
+StartupWMClass=Cultures Trainer
