@@ -45,10 +45,12 @@ sudo dnf install cultures-trainer
 
 ## Images
 
+### Main Window
+
+![](images/main-window-dark.png#gh-dark-mode-only)
+![](images/main-window-light.png#gh-light-mode-only)
+
 ### Setup Window
 
-TODO
-
-### Main Menu
-
-TODO
+![](images/setup-window-dark.png#gh-dark-mode-only)
+![](images/setup-window-light.png#gh-light-mode-only)
