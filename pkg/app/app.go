@@ -128,6 +128,12 @@ func (a *App) initContent() {
 
 func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject {
 	obj := make([]fyne.CanvasObject, len(items))
+	categoryCheckbox := widget.NewCheck(name, func(b bool) {
+		for _, item := range items {
+			index := trainer.StorageIndexes[item]
+			a.resourceFreezeChecks[index].SetChecked(b)
+		}
+	})
 	for i, item := range items {
 		index := trainer.StorageIndexes[item]
 		a.resourceValues[index] = binding.NewInt()
@@ -136,7 +142,7 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
 		obj[i] = container.NewVBox(check, entry)
 		a.resourceFreezeChecks[index] = check
 	}
-	return container.NewVBox(widget.NewLabel(name), newBorder(container.NewVBox(obj...)))
+	return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))
 }
 
 func (a *App) refreshStorageValues() {
