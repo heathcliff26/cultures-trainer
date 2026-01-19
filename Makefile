@@ -13,6 +13,12 @@ lint:
 test:
 	go test -v -timeout 300s -coverprofile=coverprofile.out -coverpkg "./pkg/..." ./...
 
+# Compile and run the trainer together with a simple test binary
+run: build
+	go build -o bin/Game.exe -ldflags="-s -w" tests/app/main.go
+	bin/cultures-trainer &
+	bin/Game.exe
+
 # Build the binary
 build: tools
 	"$(shell pwd)/bin/fyne" build -o "$(shell pwd)/bin/cultures-trainer" -release
