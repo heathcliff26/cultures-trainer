@@ -10,7 +10,7 @@ import (
 	"github.com/heathcliff26/cultures-trainer/pkg/trainer"
 )
 
-var globalResources []int32 = make([]int32, len(trainer.StorageLocations))
+var globalResources []int32 = make([]int32, trainer.ResourceCount)
 
 func main() {
 	globalResources[0] = 400

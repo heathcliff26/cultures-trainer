@@ -46,8 +46,8 @@ func New() *App {
 		app:                  app,
 		main:                 main,
 		version:              version,
-		resourceValues:       make([]binding.Int, len(trainer.StorageLocations)),
-		resourceFreezeChecks: make([]*widget.Check, len(trainer.StorageLocations)),
+		resourceValues:       make([]binding.Int, trainer.ResourceCount),
+		resourceFreezeChecks: make([]*widget.Check, trainer.ResourceCount),
 	}
 
 	a.initContent()
@@ -90,12 +90,12 @@ func (a *App) initContent() {
 	setupBlock = container.NewVBox(setupBlock, startButton)
 
 	storageCategories := newBorder(container.NewHBox(
-		a.initStorageCategory("Nahrung", trainer.CategorieNahrung),
-		a.initStorageCategory("Bauwaren", trainer.CategorieBauwaren),
-		a.initStorageCategory("Resourcen", trainer.CategorieResourcen),
-		a.initStorageCategory("Waffen", trainer.CategorieWaffen),
-		a.initStorageCategory("Bonusgegenstände", trainer.CategorieBonus),
-		a.initStorageCategory("Sonstiges", trainer.CategorieSonstiges),
+		a.initStorageCategory("Nahrung", trainer.CategoryNahrung),
+		a.initStorageCategory("Bauwaren", trainer.CategoryBauwaren),
+		a.initStorageCategory("Resourcen", trainer.CategoryResourcen),
+		a.initStorageCategory("Waffen", trainer.CategoryWaffen),
+		a.initStorageCategory("Bonusgegenstände", trainer.CategoryBonus),
+		a.initStorageCategory("Sonstiges", trainer.CategorySonstiges),
 	))
 
 	refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)

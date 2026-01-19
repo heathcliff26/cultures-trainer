@@ -1,5 +1,7 @@
 package trainer
 
+var ResourceCount int
+
 var StorageIndexes map[string]int
 
 var StorageLocations = []string{
@@ -54,7 +56,7 @@ var StorageLocations = []string{
 	"Windamulett",
 }
 
-var CategorieNahrung = []string{
+var CategoryNahrung = []string{
 	"Honig",
 	"Kuchen",
 	"Mehl",
@@ -64,7 +66,7 @@ var CategorieNahrung = []string{
 	"Weizen",
 }
 
-var CategorieBauwaren = []string{
+var CategoryBauwaren = []string{
 	"Backstein",
 	"Bruchstein",
 	"Dachziegel",
@@ -74,7 +76,7 @@ var CategorieBauwaren = []string{
 	"Steinblock",
 }
 
-var CategorieResourcen = []string{
+var CategoryResourcen = []string{
 	"Eisen",
 	"Gold",
 	"Kraut",
@@ -85,7 +87,7 @@ var CategorieResourcen = []string{
 	"Wolle",
 }
 
-var CategorieWaffen = []string{
+var CategoryWaffen = []string{
 	"Eisenspeer",
 	"Holzspeer",
 	"Kettenhemd",
@@ -98,7 +100,7 @@ var CategorieWaffen = []string{
 	"Waffenrock",
 }
 
-var CategorieBonus = []string{
+var CategoryBonus = []string{
 	"Eisenwerkzeug",
 	"Geschirr",
 	"Großer Heiltrank",
@@ -112,7 +114,7 @@ var CategorieBonus = []string{
 	"Schuhe",
 }
 
-var CategorieSonstiges = []string{
+var CategorySonstiges = []string{
 	"Nahrungsamulett",
 	"Stärkeamulett",
 	"Trefferamulett",
@@ -122,7 +124,8 @@ var CategorieSonstiges = []string{
 }
 
 func init() {
-	StorageIndexes = make(map[string]int, len(StorageLocations))
+	ResourceCount = len(StorageLocations)
+	StorageIndexes = make(map[string]int, ResourceCount)
 
 	for i, name := range StorageLocations {
 		StorageIndexes[name] = i

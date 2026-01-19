@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"fyne.io/fyne/v2/test"
-	"github.com/go-openapi/testify/v2/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetVersion(t *testing.T) {
