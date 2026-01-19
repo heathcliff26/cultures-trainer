@@ -127,8 +127,8 @@ func New() *App <span class="cov0" title="0">{
                 app:                  app,
                 main:                 main,
                 version:              version,
-                resourceValues:       make([]binding.Int, len(trainer.StorageLocations)),
-                resourceFreezeChecks: make([]*widget.Check, len(trainer.StorageLocations)),
+                resourceValues:       make([]binding.Int, trainer.ResourceCount),
+                resourceFreezeChecks: make([]*widget.Check, trainer.ResourceCount),
         }
 
         a.initContent()
@@ -171,12 +171,12 @@ func (a *App) initContent() <span class="cov0" title="0">{
         setupBlock = container.NewVBox(setupBlock, startButton)
 
         storageCategories := newBorder(container.NewHBox(
-                a.initStorageCategory("Nahrung", trainer.CategorieNahrung),
-                a.initStorageCategory("Bauwaren", trainer.CategorieBauwaren),
-                a.initStorageCategory("Resourcen", trainer.CategorieResourcen),
-                a.initStorageCategory("Waffen", trainer.CategorieWaffen),
-                a.initStorageCategory("Bonusgegenstände", trainer.CategorieBonus),
-                a.initStorageCategory("Sonstiges", trainer.CategorieSonstiges),
+                a.initStorageCategory("Nahrung", trainer.CategoryNahrung),
+                a.initStorageCategory("Bauwaren", trainer.CategoryBauwaren),
+                a.initStorageCategory("Resourcen", trainer.CategoryResourcen),
+                a.initStorageCategory("Waffen", trainer.CategoryWaffen),
+                a.initStorageCategory("Bonusgegenstände", trainer.CategoryBonus),
+                a.initStorageCategory("Sonstiges", trainer.CategorySonstiges),
         ))
 
         refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)
@@ -430,6 +430,8 @@ func hexStringToUint64(hexStr string) (uint64, error) <span class="cov0" title="
 		
 		<pre class="file" id="file3" style="display: none">package trainer
 
+var ResourceCount int
+
 var StorageIndexes map[string]int
 
 var StorageLocations = []string{
@@ -484,7 +486,7 @@ var StorageLocations = []string{
         "Windamulett",
 }
 
-var CategorieNahrung = []string{
+var CategoryNahrung = []string{
         "Honig",
         "Kuchen",
         "Mehl",
@@ -494,7 +496,7 @@ var CategorieNahrung = []string{
         "Weizen",
 }
 
-var CategorieBauwaren = []string{
+var CategoryBauwaren = []string{
         "Backstein",
         "Bruchstein",
         "Dachziegel",
@@ -504,7 +506,7 @@ var CategorieBauwaren = []string{
         "Steinblock",
 }
 
-var CategorieResourcen = []string{
+var CategoryResourcen = []string{
         "Eisen",
         "Gold",
         "Kraut",
@@ -515,7 +517,7 @@ var CategorieResourcen = []string{
         "Wolle",
 }
 
-var CategorieWaffen = []string{
+var CategoryWaffen = []string{
         "Eisenspeer",
         "Holzspeer",
         "Kettenhemd",
@@ -528,7 +530,7 @@ var CategorieWaffen = []string{
         "Waffenrock",
 }
 
-var CategorieBonus = []string{
+var CategoryBonus = []string{
         "Eisenwerkzeug",
         "Geschirr",
         "Großer Heiltrank",
@@ -542,7 +544,7 @@ var CategorieBonus = []string{
         "Schuhe",
 }
 
-var CategorieSonstiges = []string{
+var CategorySonstiges = []string{
         "Nahrungsamulett",
         "Stärkeamulett",
         "Trefferamulett",
@@ -552,7 +554,8 @@ var CategorieSonstiges = []string{
 }
 
 func init() <span class="cov8" title="1">{
-        StorageIndexes = make(map[string]int, len(StorageLocations))
+        ResourceCount = len(StorageLocations)
+        StorageIndexes = make(map[string]int, ResourceCount)
 
         for i, name := range StorageLocations </span><span class="cov8" title="1">{
                 StorageIndexes[name] = i
