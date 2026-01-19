@@ -209,7 +209,13 @@ func (a *App) initContent() <span class="cov0" title="0">{
 
 func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject <span class="cov0" title="0">{
         obj := make([]fyne.CanvasObject, len(items))
-        for i, item := range items </span><span class="cov0" title="0">{
+        categoryCheckbox := widget.NewCheck(name, func(b bool) </span><span class="cov0" title="0">{
+                for _, item := range items </span><span class="cov0" title="0">{
+                        index := trainer.StorageIndexes[item]
+                        a.resourceFreezeChecks[index].SetChecked(b)
+                }</span>
+        })
+        <span class="cov0" title="0">for i, item := range items </span><span class="cov0" title="0">{
                 index := trainer.StorageIndexes[item]
                 a.resourceValues[index] = binding.NewInt()
                 entry := widget.NewEntryWithData(binding.IntToString(a.resourceValues[index]))
@@ -217,7 +223,7 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
                 obj[i] = container.NewVBox(check, entry)
                 a.resourceFreezeChecks[index] = check
         }</span>
-        <span class="cov0" title="0">return container.NewVBox(widget.NewLabel(name), newBorder(container.NewVBox(obj...)))</span>
+        <span class="cov0" title="0">return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))</span>
 }
 
 func (a *App) refreshStorageValues() <span class="cov0" title="0">{
