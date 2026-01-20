@@ -65,7 +65,7 @@
 				
 				<option value="file4">github.com/heathcliff26/cultures-trainer/pkg/trainer/const.go (100.0%)</option>
 				
-				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (0.0%)</option>
+				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (13.8%)</option>
 				
 				<option value="file6">github.com/heathcliff26/cultures-trainer/pkg/trainer/utils.go (0.0%)</option>
 				
@@ -85,7 +85,6 @@
 
 import (
         "fmt"
-        "math"
 
         "fyne.io/fyne/v2"
         fApp "fyne.io/fyne/v2/app"
@@ -260,7 +259,7 @@ func (a *App) freezeSelectedValues() <span class="cov0" title="0">{
         <span class="cov0" title="0">values := make([]trainer.IndexedValue, 0, trainer.ResourceCount)
         for i, entry := range a.resourceEntries </span><span class="cov0" title="0">{
                 if entry.Checkbox.Checked </span><span class="cov0" title="0">{
-                        values = append(values, trainer.IndexedValue{Index: uint64(math.Abs(float64(i))), Value: a.resourceEntries[i].Get()})
+                        values = append(values, trainer.IndexedValue{Index: i, Value: a.resourceEntries[i].Get()})
                 }</span>
         }
         <span class="cov0" title="0">if len(values) == 0 </span><span class="cov0" title="0">{
@@ -620,6 +619,7 @@ func init() <span class="cov8" title="1">{
 		<pre class="file" id="file5" style="display: none">package trainer
 
 import (
+        "fmt"
         "log/slog"
         "time"
         "unsafe"
@@ -637,7 +637,7 @@ type Trainer struct {
 }
 
 type IndexedValue struct {
-        Index uint64
+        Index int
         Value int32
 }
 
@@ -658,16 +658,7 @@ func (t *Trainer) ReadStorageValues() ([]int32, error) <span class="cov0" title=
         local := make([]unix.Iovec, len(res))
         remote := make([]unix.RemoteIovec, len(res))
         for i := range res </span><span class="cov0" title="0">{
-                p := (*byte)(unsafe.Pointer(&amp;res[i]))
-                size := int(unsafe.Sizeof(res[i]))
-                local[i] = unix.Iovec{
-                        Base: p,
-                        Len:  uint64(size),
-                }
-                remote[i] = unix.RemoteIovec{
-                        Base: uintptr(t.storageAddress + uint64(i*size)),
-                        Len:  size,
-                }
+                local[i], remote[i] = t.createIovecPair(i, &amp;res[i])
         }</span>
         <span class="cov0" title="0">c, err := unix.ProcessVMReadv(t.pid, local, remote, 0)
         if err != nil </span><span class="cov0" title="0">{
@@ -681,16 +672,7 @@ func (t *Trainer) WriteStorageValues(values []int32) error <span class="cov0" ti
         local := make([]unix.Iovec, len(values))
         remote := make([]unix.RemoteIovec, len(values))
         for i := range values </span><span class="cov0" title="0">{
-                p := (*byte)(unsafe.Pointer(&amp;values[i]))
-                size := int(unsafe.Sizeof(values[i]))
-                local[i] = unix.Iovec{
-                        Base: p,
-                        Len:  uint64(size),
-                }
-                remote[i] = unix.RemoteIovec{
-                        Base: uintptr(t.storageAddress + uint64(i*size)),
-                        Len:  size,
-                }
+                local[i], remote[i] = t.createIovecPair(i, &amp;values[i])
         }</span>
 
         <span class="cov0" title="0">c, err := unix.ProcessVMWritev(t.pid, local, remote, 0)
@@ -716,16 +698,7 @@ func (t *Trainer) FreezeStorageValues(values []IndexedValue) <span class="cov0" 
                 remote := make([]unix.RemoteIovec, len(values))
 
                 for i, value := range values </span><span class="cov0" title="0">{
-                        p := (*byte)(unsafe.Pointer(&amp;value.Value))
-                        size := int(unsafe.Sizeof(value.Value))
-                        local[i] = unix.Iovec{
-                                Base: p,
-                                Len:  uint64(size),
-                        }
-                        remote[i] = unix.RemoteIovec{
-                                Base: uintptr(t.storageAddress + uint64(size)*value.Index),
-                                Len:  size,
-                        }
+                        local[i], remote[i] = t.createIovecPair(value.Index, &amp;value.Value)
                 }</span>
 
                 <span class="cov0" title="0">for </span><span class="cov0" title="0">{
@@ -756,6 +729,26 @@ func (t *Trainer) UnfreezeStorageValues() <span class="cov0" title="0">{
                 t.stop = nil
                 t.stopped = nil
         }</span>
+}
+
+func (t *Trainer) createIovecPair(i int, value *int32) (unix.Iovec, unix.RemoteIovec) <span class="cov8" title="1">{
+        // #nosec G103 -- Intended and needed usage of unsafe for low-level memory access
+        p := (*byte)(unsafe.Pointer(value))
+        size := unsafe.Sizeof(*value)
+
+        if i &lt; 0 </span><span class="cov8" title="1">{
+                panic(fmt.Sprintf("index cannot be negative, but was %d", i))</span>
+        }
+        <span class="cov8" title="1">iUint64 := uint64(i)
+        local := unix.Iovec{
+                Base: p,
+                Len:  uint64(size),
+        }
+        remote := unix.RemoteIovec{
+                Base: uintptr(t.storageAddress + iUint64*uint64(size)),
+                Len:  int(size),
+        }
+        return local, remote</span>
 }
 </pre>
 		
