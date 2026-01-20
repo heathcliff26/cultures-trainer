@@ -1,6 +1,7 @@
 package trainer
 
 import (
+	"fmt"
 	"log/slog"
 	"time"
 	"unsafe"
@@ -18,7 +19,7 @@ type Trainer struct {
 }
 
 type IndexedValue struct {
-	Index uint64
+	Index int
 	Value int32
 }
 
@@ -39,16 +40,7 @@ func (t *Trainer) ReadStorageValues() ([]int32, error) {
 	local := make([]unix.Iovec, len(res))
 	remote := make([]unix.RemoteIovec, len(res))
 	for i := range res {
-		p := (*byte)(unsafe.Pointer(&res[i]))
-		size := int(unsafe.Sizeof(res[i]))
-		local[i] = unix.Iovec{
-			Base: p,
-			Len:  uint64(size),
-		}
-		remote[i] = unix.RemoteIovec{
-			Base: uintptr(t.storageAddress + uint64(i*size)),
-			Len:  size,
-		}
+		local[i], remote[i] = t.createIovecPair(i, &res[i])
 	}
 	c, err := unix.ProcessVMReadv(t.pid, local, remote, 0)
 	if err != nil {
@@ -62,16 +54,7 @@ func (t *Trainer) WriteStorageValues(values []int32) error {
 	local := make([]unix.Iovec, len(values))
 	remote := make([]unix.RemoteIovec, len(values))
 	for i := range values {
-		p := (*byte)(unsafe.Pointer(&values[i]))
-		size := int(unsafe.Sizeof(values[i]))
-		local[i] = unix.Iovec{
-			Base: p,
-			Len:  uint64(size),
-		}
-		remote[i] = unix.RemoteIovec{
-			Base: uintptr(t.storageAddress + uint64(i*size)),
-			Len:  size,
-		}
+		local[i], remote[i] = t.createIovecPair(i, &values[i])
 	}
 
 	c, err := unix.ProcessVMWritev(t.pid, local, remote, 0)
@@ -97,16 +80,7 @@ func (t *Trainer) FreezeStorageValues(values []IndexedValue) {
 		remote := make([]unix.RemoteIovec, len(values))
 
 		for i, value := range values {
-			p := (*byte)(unsafe.Pointer(&value.Value))
-			size := int(unsafe.Sizeof(value.Value))
-			local[i] = unix.Iovec{
-				Base: p,
-				Len:  uint64(size),
-			}
-			remote[i] = unix.RemoteIovec{
-				Base: uintptr(t.storageAddress + uint64(size)*value.Index),
-				Len:  size,
-			}
+			local[i], remote[i] = t.createIovecPair(value.Index, &value.Value)
 		}
 
 		for {
@@ -137,4 +111,24 @@ func (t *Trainer) UnfreezeStorageValues() {
 		t.stop = nil
 		t.stopped = nil
 	}
+}
+
+func (t *Trainer) createIovecPair(i int, value *int32) (unix.Iovec, unix.RemoteIovec) {
+	// #nosec G103 -- Intended and needed usage of unsafe for low-level memory access
+	p := (*byte)(unsafe.Pointer(value))
+	size := unsafe.Sizeof(*value)
+
+	if i < 0 {
+		panic(fmt.Sprintf("index cannot be negative, but was %d", i))
+	}
+	iUint64 := uint64(i)
+	local := unix.Iovec{
+		Base: p,
+		Len:  uint64(size),
+	}
+	remote := unix.RemoteIovec{
+		Base: uintptr(t.storageAddress + iUint64*uint64(size)),
+		Len:  int(size),
+	}
+	return local, remote
 }

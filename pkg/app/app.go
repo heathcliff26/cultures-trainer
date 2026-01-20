@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"math"
 
 	"fyne.io/fyne/v2"
 	fApp "fyne.io/fyne/v2/app"
@@ -177,7 +176,7 @@ func (a *App) freezeSelectedValues() {
 	values := make([]trainer.IndexedValue, 0, trainer.ResourceCount)
 	for i, entry := range a.resourceEntries {
 		if entry.Checkbox.Checked {
-			values = append(values, trainer.IndexedValue{Index: uint64(math.Abs(float64(i))), Value: a.resourceEntries[i].Get()})
+			values = append(values, trainer.IndexedValue{Index: i, Value: a.resourceEntries[i].Get()})
 		}
 	}
 	if len(values) == 0 {
