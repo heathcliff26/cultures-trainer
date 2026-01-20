@@ -29,25 +29,25 @@
     <screenshots>
         <screenshot type="default">
             <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.0.1/images/main-window-dark.png
+                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.1.0/images/main-window-dark.png
             </image>
             <caption>Main Window (Dark Theme)</caption>
         </screenshot>
         <screenshot type="default">
             <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.0.1/images/main-window-light.png
+                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.1.0/images/main-window-light.png
             </image>
             <caption>Main Window (Light Theme)</caption>
         </screenshot>
         <screenshot>
             <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.0.1/images/setup-window-dark.png
+                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.1.0/images/setup-window-dark.png
             </image>
             <caption>Setup Window (Dark Theme)</caption>
         </screenshot>
         <screenshot>
             <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.0.1/images/setup-window-light.png
+                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.1.0/images/setup-window-light.png
             </image>
             <caption>Setup Window (Light Theme)</caption>
         </screenshot>
