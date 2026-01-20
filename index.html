@@ -61,7 +61,7 @@
 				
 				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (72.0%)</option>
 				
-				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (95.5%)</option>
+				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (92.5%)</option>
 				
 				<option value="file4">github.com/heathcliff26/cultures-trainer/pkg/trainer/const.go (100.0%)</option>
 				
@@ -90,11 +90,10 @@ import (
         fApp "fyne.io/fyne/v2/app"
         "fyne.io/fyne/v2/container"
         "fyne.io/fyne/v2/dialog"
+        "fyne.io/fyne/v2/layout"
         "fyne.io/fyne/v2/widget"
         "github.com/heathcliff26/cultures-trainer/pkg/trainer"
 )
-
-const minResourceLabelLength = 25
 
 const (
         freezeButtonTextFreeze   = "Freeze"
@@ -158,6 +157,7 @@ func (a *App) initContent() <span class="cov0" title="0">{
 
         storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) </span><span class="cov0" title="0">{
                 offset := trainer.StorageIndexes[s]
+                // #nosec G115 -- The indexes are guaranteed to be positive.
                 a.storageAddressOffset = uint64(offset)
         }</span>)
         <span class="cov0" title="0">storageAddressTypeSelect.SetSelectedIndex(7)
@@ -213,12 +213,24 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
                         a.resourceEntries[index].Checkbox.SetChecked(b)
                 }</span>
         })
+        <span class="cov0" title="0">categoryIncreaseButton := widget.NewButton("+", func() </span><span class="cov0" title="0">{
+                for _, item := range items </span><span class="cov0" title="0">{
+                        index := trainer.StorageIndexes[item]
+                        a.resourceEntries[index].Increase()
+                }</span>
+        })
+        <span class="cov0" title="0">categoryDecreaseButton := widget.NewButton("-", func() </span><span class="cov0" title="0">{
+                for _, item := range items </span><span class="cov0" title="0">{
+                        index := trainer.StorageIndexes[item]
+                        a.resourceEntries[index].Decrease()
+                }</span>
+        })
         <span class="cov0" title="0">for i, item := range items </span><span class="cov0" title="0">{
                 index := trainer.StorageIndexes[item]
                 a.resourceEntries[index] = NewInt32Entry(item)
                 obj[i] = a.resourceEntries[index]
         }</span>
-        <span class="cov0" title="0">return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))</span>
+        <span class="cov0" title="0">return container.NewVBox(container.NewHBox(categoryCheckbox, layout.NewSpacer(), categoryIncreaseButton, categoryDecreaseButton), newBorder(container.NewVBox(obj...)))</span>
 }
 
 func (a *App) refreshStorageValues() <span class="cov0" title="0">{
@@ -419,15 +431,23 @@ import (
 
         "fyne.io/fyne/v2"
         "fyne.io/fyne/v2/container"
+        "fyne.io/fyne/v2/layout"
         "fyne.io/fyne/v2/widget"
+)
+
+const (
+        increaseDecreaseStepSize int32 = 50
+        maxResourceValue         int32 = 500
 )
 
 type Int32Entry struct {
         widget.BaseWidget
 
-        Entry    *widget.Entry
-        Checkbox *widget.Check
-        canvas   fyne.CanvasObject
+        Entry          *widget.Entry
+        Checkbox       *widget.Check
+        increaseButton *widget.Button
+        decreaseButton *widget.Button
+        canvas         fyne.CanvasObject
 
         value int32
 }
@@ -435,12 +455,16 @@ type Int32Entry struct {
 // Create a new entry widget for int32 values with an associated checkbox.
 func NewInt32Entry(label string) *Int32Entry <span class="cov8" title="1">{
         entry := widget.NewEntry()
-        checkbox := widget.NewCheck(minimumLengthString(label, minResourceLabelLength), nil)
+        checkbox := widget.NewCheck(label, nil)
+        increaseButton := widget.NewButton("+", nil)
+        decreaseButton := widget.NewButton("-", nil)
 
         e := &amp;Int32Entry{
-                Entry:    entry,
-                Checkbox: checkbox,
-                canvas:   container.NewVBox(checkbox, entry),
+                Entry:          entry,
+                Checkbox:       checkbox,
+                increaseButton: increaseButton,
+                decreaseButton: decreaseButton,
+                canvas:         container.NewVBox(container.NewHBox(checkbox, layout.NewSpacer(), increaseButton, decreaseButton), entry),
         }
 
         e.Entry.Validator = func(s string) error </span><span class="cov8" title="1">{
@@ -461,6 +485,9 @@ func NewInt32Entry(label string) *Int32Entry <span class="cov8" title="1">{
         }
         <span class="cov8" title="1">e.Set(0)
 
+        e.increaseButton.OnTapped = e.Increase
+        e.decreaseButton.OnTapped = e.Decrease
+
         e.ExtendBaseWidget(e)
         return e</span>
 }
@@ -479,6 +506,34 @@ func (e *Int32Entry) Set(v int32) <span class="cov8" title="1">{
 func (e *Int32Entry) Get() int32 <span class="cov8" title="1">{
         return e.value
 }</span>
+
+// Increase the value by a set amount up to the defined maximum.
+// First call will increase it up to the nearest multiple of the step size.
+func (e *Int32Entry) Increase() <span class="cov8" title="1">{
+        v := e.Get() + increaseDecreaseStepSize
+        m := v % increaseDecreaseStepSize
+        v -= m
+        if v &gt; maxResourceValue </span><span class="cov0" title="0">{
+                v = maxResourceValue
+        }</span>
+        <span class="cov8" title="1">e.Set(v)</span>
+}
+
+// Decrease the value by a set amount up to 0.
+// First call will decrease it down to the nearest multiple of the step size.
+func (e *Int32Entry) Decrease() <span class="cov8" title="1">{
+        v := e.Get()
+        m := v % increaseDecreaseStepSize
+        if m == 0 </span><span class="cov8" title="1">{
+                v -= increaseDecreaseStepSize
+        }</span> else<span class="cov8" title="1"> {
+                v -= m
+        }</span>
+        <span class="cov8" title="1">if v &lt; 0 </span><span class="cov0" title="0">{
+                v = 0
+        }</span>
+        <span class="cov8" title="1">e.Set(v)</span>
+}
 </pre>
 		
 		<pre class="file" id="file4" style="display: none">package trainer
