@@ -7,15 +7,23 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+)
+
+const (
+	increaseDecreaseStepSize int32 = 50
+	maxResourceValue         int32 = 500
 )
 
 type Int32Entry struct {
 	widget.BaseWidget
 
-	Entry    *widget.Entry
-	Checkbox *widget.Check
-	canvas   fyne.CanvasObject
+	Entry          *widget.Entry
+	Checkbox       *widget.Check
+	increaseButton *widget.Button
+	decreaseButton *widget.Button
+	canvas         fyne.CanvasObject
 
 	value int32
 }
@@ -23,12 +31,16 @@ type Int32Entry struct {
 // Create a new entry widget for int32 values with an associated checkbox.
 func NewInt32Entry(label string) *Int32Entry {
 	entry := widget.NewEntry()
-	checkbox := widget.NewCheck(minimumLengthString(label, minResourceLabelLength), nil)
+	checkbox := widget.NewCheck(label, nil)
+	increaseButton := widget.NewButton("+", nil)
+	decreaseButton := widget.NewButton("-", nil)
 
 	e := &Int32Entry{
-		Entry:    entry,
-		Checkbox: checkbox,
-		canvas:   container.NewVBox(checkbox, entry),
+		Entry:          entry,
+		Checkbox:       checkbox,
+		increaseButton: increaseButton,
+		decreaseButton: decreaseButton,
+		canvas:         container.NewVBox(container.NewHBox(checkbox, layout.NewSpacer(), increaseButton, decreaseButton), entry),
 	}
 
 	e.Entry.Validator = func(s string) error {
@@ -49,6 +61,9 @@ func NewInt32Entry(label string) *Int32Entry {
 	}
 	e.Set(0)
 
+	e.increaseButton.OnTapped = e.Increase
+	e.decreaseButton.OnTapped = e.Decrease
+
 	e.ExtendBaseWidget(e)
 	return e
 }
@@ -66,4 +81,32 @@ func (e *Int32Entry) Set(v int32) {
 // Get the int32 value of the entry.
 func (e *Int32Entry) Get() int32 {
 	return e.value
+}
+
+// Increase the value by a set amount up to the defined maximum.
+// First call will increase it up to the nearest multiple of the step size.
+func (e *Int32Entry) Increase() {
+	v := e.Get() + increaseDecreaseStepSize
+	m := v % increaseDecreaseStepSize
+	v -= m
+	if v > maxResourceValue {
+		v = maxResourceValue
+	}
+	e.Set(v)
+}
+
+// Decrease the value by a set amount up to 0.
+// First call will decrease it down to the nearest multiple of the step size.
+func (e *Int32Entry) Decrease() {
+	v := e.Get()
+	m := v % increaseDecreaseStepSize
+	if m == 0 {
+		v -= increaseDecreaseStepSize
+	} else {
+		v -= m
+	}
+	if v < 0 {
+		v = 0
+	}
+	e.Set(v)
 }

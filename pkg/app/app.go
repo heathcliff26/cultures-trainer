@@ -8,11 +8,10 @@ import (
 	fApp "fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/heathcliff26/cultures-trainer/pkg/trainer"
 )
-
-const minResourceLabelLength = 25
 
 const (
 	freezeButtonTextFreeze   = "Freeze"
@@ -76,6 +75,7 @@ func (a *App) initContent() {
 
 	storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) {
 		offset := trainer.StorageIndexes[s]
+		// #nosec G115 -- The indexes are guaranteed to be positive.
 		a.storageAddressOffset = uint64(offset)
 	})
 	storageAddressTypeSelect.SetSelectedIndex(7)
@@ -131,12 +131,24 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
 			a.resourceEntries[index].Checkbox.SetChecked(b)
 		}
 	})
+	categoryIncreaseButton := widget.NewButton("+", func() {
+		for _, item := range items {
+			index := trainer.StorageIndexes[item]
+			a.resourceEntries[index].Increase()
+		}
+	})
+	categoryDecreaseButton := widget.NewButton("-", func() {
+		for _, item := range items {
+			index := trainer.StorageIndexes[item]
+			a.resourceEntries[index].Decrease()
+		}
+	})
 	for i, item := range items {
 		index := trainer.StorageIndexes[item]
 		a.resourceEntries[index] = NewInt32Entry(item)
 		obj[i] = a.resourceEntries[index]
 	}
-	return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))
+	return container.NewVBox(container.NewHBox(categoryCheckbox, layout.NewSpacer(), categoryIncreaseButton, categoryDecreaseButton), newBorder(container.NewVBox(obj...)))
 }
 
 func (a *App) refreshStorageValues() {
