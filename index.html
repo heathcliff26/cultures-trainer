@@ -61,11 +61,13 @@
 				
 				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (72.0%)</option>
 				
-				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/trainer/const.go (100.0%)</option>
+				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (95.5%)</option>
 				
-				<option value="file4">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (0.0%)</option>
+				<option value="file4">github.com/heathcliff26/cultures-trainer/pkg/trainer/const.go (100.0%)</option>
 				
-				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/utils.go (0.0%)</option>
+				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (0.0%)</option>
+				
+				<option value="file6">github.com/heathcliff26/cultures-trainer/pkg/trainer/utils.go (0.0%)</option>
 				
 				</select>
 			</div>
@@ -83,12 +85,11 @@
 
 import (
         "fmt"
-        "log/slog"
+        "math"
 
         "fyne.io/fyne/v2"
         fApp "fyne.io/fyne/v2/app"
         "fyne.io/fyne/v2/container"
-        "fyne.io/fyne/v2/data/binding"
         "fyne.io/fyne/v2/dialog"
         "fyne.io/fyne/v2/widget"
         "github.com/heathcliff26/cultures-trainer/pkg/trainer"
@@ -113,8 +114,7 @@ type App struct {
 
         storageAddressOffset uint64
         storageAddressEntry  *widget.Entry
-        resourceValues       []binding.Int
-        resourceFreezeChecks []*widget.Check
+        resourceEntries      []*Int32Entry
         freezeButton         *widget.Button
 }
 
@@ -124,11 +124,10 @@ func New() *App <span class="cov0" title="0">{
         main := app.NewWindow(version.Name)
 
         a := &amp;App{
-                app:                  app,
-                main:                 main,
-                version:              version,
-                resourceValues:       make([]binding.Int, trainer.ResourceCount),
-                resourceFreezeChecks: make([]*widget.Check, trainer.ResourceCount),
+                app:             app,
+                main:            main,
+                version:         version,
+                resourceEntries: make([]*Int32Entry, trainer.ResourceCount),
         }
 
         a.initContent()
@@ -212,16 +211,13 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
         categoryCheckbox := widget.NewCheck(name, func(b bool) </span><span class="cov0" title="0">{
                 for _, item := range items </span><span class="cov0" title="0">{
                         index := trainer.StorageIndexes[item]
-                        a.resourceFreezeChecks[index].SetChecked(b)
+                        a.resourceEntries[index].Checkbox.SetChecked(b)
                 }</span>
         })
         <span class="cov0" title="0">for i, item := range items </span><span class="cov0" title="0">{
                 index := trainer.StorageIndexes[item]
-                a.resourceValues[index] = binding.NewInt()
-                entry := widget.NewEntryWithData(binding.IntToString(a.resourceValues[index]))
-                check := widget.NewCheck(minimumLengthString(item, minResourceLabelLength), nil)
-                obj[i] = container.NewVBox(check, entry)
-                a.resourceFreezeChecks[index] = check
+                a.resourceEntries[index] = NewInt32Entry(item)
+                obj[i] = a.resourceEntries[index]
         }</span>
         <span class="cov0" title="0">return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))</span>
 }
@@ -236,27 +232,19 @@ func (a *App) refreshStorageValues() <span class="cov0" title="0">{
                 a.DisplayError(fmt.Errorf("failed to read values from game: %v", err))
                 return
         }</span>
-        <span class="cov0" title="0">for i := range a.resourceValues </span><span class="cov0" title="0">{
-                err = a.resourceValues[i].Set(int(values[i]))
-                if err != nil </span><span class="cov0" title="0">{
-                        slog.Error("Failed to set resource value", slog.Int("index", i), slog.Int("value", int(values[i])), slog.String("error", err.Error()))
-                }</span>
-        }
+        <span class="cov0" title="0">for i := range a.resourceEntries </span><span class="cov0" title="0">{
+                a.resourceEntries[i].Set(values[i])
+        }</span>
 }
 
 func (a *App) applyStorageValues() <span class="cov0" title="0">{
         if a.trainer == nil </span><span class="cov0" title="0">{
                 return
         }</span>
-        <span class="cov0" title="0">values := make([]int32, len(a.resourceValues))
-        for i := range a.resourceValues </span><span class="cov0" title="0">{
-                v, err := a.resourceValues[i].Get()
-                if err != nil </span><span class="cov0" title="0">{
-                        a.DisplayError(fmt.Errorf("failed to get value for resource index %d: %v", i, err))
-                        return
-                }</span>
-                <span class="cov0" title="0">values[i] = int32(v)</span>
-        }
+        <span class="cov0" title="0">values := make([]int32, trainer.ResourceCount)
+        for i := range a.resourceEntries </span><span class="cov0" title="0">{
+                values[i] = a.resourceEntries[i].Get()
+        }</span>
         <span class="cov0" title="0">err := a.trainer.WriteStorageValues(values)
         if err != nil </span><span class="cov0" title="0">{
                 a.DisplayError(fmt.Errorf("failed to write values to game memory: %v", err))
@@ -269,16 +257,11 @@ func (a *App) freezeSelectedValues() <span class="cov0" title="0">{
                 return
         }</span>
 
-        <span class="cov0" title="0">values := make([]trainer.IndexedValue, 0, len(a.resourceValues))
-        for i, check := range a.resourceFreezeChecks </span><span class="cov0" title="0">{
-                if check.Checked </span><span class="cov0" title="0">{
-                        v, err := a.resourceValues[i].Get()
-                        if err != nil </span><span class="cov0" title="0">{
-                                a.DisplayError(fmt.Errorf("failed to get value for resource index %d: %v", i, err))
-                                return
-                        }</span>
-                        <span class="cov0" title="0">values = append(values, trainer.IndexedValue{Index: uint64(i), Value: int32(v)})</span>
-                }
+        <span class="cov0" title="0">values := make([]trainer.IndexedValue, 0, trainer.ResourceCount)
+        for i, entry := range a.resourceEntries </span><span class="cov0" title="0">{
+                if entry.Checkbox.Checked </span><span class="cov0" title="0">{
+                        values = append(values, trainer.IndexedValue{Index: uint64(math.Abs(float64(i))), Value: a.resourceEntries[i].Get()})
+                }</span>
         }
         <span class="cov0" title="0">if len(values) == 0 </span><span class="cov0" title="0">{
                 a.DisplayError(fmt.Errorf("no values selected to freeze"))
@@ -428,7 +411,78 @@ func hexStringToUint64(hexStr string) (uint64, error) <span class="cov0" title="
 }</span>
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package trainer
+		<pre class="file" id="file3" style="display: none">package app
+
+import (
+        "fmt"
+        "log/slog"
+        "strconv"
+
+        "fyne.io/fyne/v2"
+        "fyne.io/fyne/v2/container"
+        "fyne.io/fyne/v2/widget"
+)
+
+type Int32Entry struct {
+        widget.BaseWidget
+
+        Entry    *widget.Entry
+        Checkbox *widget.Check
+        canvas   fyne.CanvasObject
+
+        value int32
+}
+
+// Create a new entry widget for int32 values with an associated checkbox.
+func NewInt32Entry(label string) *Int32Entry <span class="cov8" title="1">{
+        entry := widget.NewEntry()
+        checkbox := widget.NewCheck(minimumLengthString(label, minResourceLabelLength), nil)
+
+        e := &amp;Int32Entry{
+                Entry:    entry,
+                Checkbox: checkbox,
+                canvas:   container.NewVBox(checkbox, entry),
+        }
+
+        e.Entry.Validator = func(s string) error </span><span class="cov8" title="1">{
+                _, err := strconv.ParseInt(s, 10, 32)
+                return err
+        }</span>
+        <span class="cov8" title="1">e.Entry.OnChanged = func(s string) </span><span class="cov8" title="1">{
+                if s == "" </span><span class="cov8" title="1">{
+                        e.value = 0
+                        return
+                }</span>
+                <span class="cov8" title="1">i, err := strconv.ParseInt(s, 10, 32)
+                if err != nil </span><span class="cov8" title="1">{
+                        slog.Error("Failed to parse int32 from entry", slog.String("input", s), slog.String("error", err.Error()))
+                        return
+                }</span>
+                <span class="cov8" title="1">e.value = int32(i)</span>
+        }
+        <span class="cov8" title="1">e.Set(0)
+
+        e.ExtendBaseWidget(e)
+        return e</span>
+}
+
+func (e *Int32Entry) CreateRenderer() fyne.WidgetRenderer <span class="cov0" title="0">{
+        return widget.NewSimpleRenderer(e.canvas)
+}</span>
+
+// Set the int32 value of the entry.
+func (e *Int32Entry) Set(v int32) <span class="cov8" title="1">{
+        e.value = v
+        e.Entry.SetText(fmt.Sprintf("%d", e.value))
+}</span>
+
+// Get the int32 value of the entry.
+func (e *Int32Entry) Get() int32 <span class="cov8" title="1">{
+        return e.value
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package trainer
 
 var ResourceCount int
 
@@ -563,7 +617,7 @@ func init() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package trainer
+		<pre class="file" id="file5" style="display: none">package trainer
 
 import (
         "log/slog"
@@ -705,7 +759,7 @@ func (t *Trainer) UnfreezeStorageValues() <span class="cov0" title="0">{
 }
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package trainer
+		<pre class="file" id="file6" style="display: none">package trainer
 
 import (
         "fmt"
