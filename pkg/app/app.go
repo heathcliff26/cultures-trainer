@@ -2,12 +2,11 @@ package app
 
 import (
 	"fmt"
-	"log/slog"
+	"math"
 
 	"fyne.io/fyne/v2"
 	fApp "fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/heathcliff26/cultures-trainer/pkg/trainer"
@@ -32,8 +31,7 @@ type App struct {
 
 	storageAddressOffset uint64
 	storageAddressEntry  *widget.Entry
-	resourceValues       []binding.Int
-	resourceFreezeChecks []*widget.Check
+	resourceEntries      []*Int32Entry
 	freezeButton         *widget.Button
 }
 
@@ -43,11 +41,10 @@ func New() *App {
 	main := app.NewWindow(version.Name)
 
 	a := &App{
-		app:                  app,
-		main:                 main,
-		version:              version,
-		resourceValues:       make([]binding.Int, trainer.ResourceCount),
-		resourceFreezeChecks: make([]*widget.Check, trainer.ResourceCount),
+		app:             app,
+		main:            main,
+		version:         version,
+		resourceEntries: make([]*Int32Entry, trainer.ResourceCount),
 	}
 
 	a.initContent()
@@ -131,16 +128,13 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
 	categoryCheckbox := widget.NewCheck(name, func(b bool) {
 		for _, item := range items {
 			index := trainer.StorageIndexes[item]
-			a.resourceFreezeChecks[index].SetChecked(b)
+			a.resourceEntries[index].Checkbox.SetChecked(b)
 		}
 	})
 	for i, item := range items {
 		index := trainer.StorageIndexes[item]
-		a.resourceValues[index] = binding.NewInt()
-		entry := widget.NewEntryWithData(binding.IntToString(a.resourceValues[index]))
-		check := widget.NewCheck(minimumLengthString(item, minResourceLabelLength), nil)
-		obj[i] = container.NewVBox(check, entry)
-		a.resourceFreezeChecks[index] = check
+		a.resourceEntries[index] = NewInt32Entry(item)
+		obj[i] = a.resourceEntries[index]
 	}
 	return container.NewVBox(categoryCheckbox, newBorder(container.NewVBox(obj...)))
 }
@@ -155,11 +149,8 @@ func (a *App) refreshStorageValues() {
 		a.DisplayError(fmt.Errorf("failed to read values from game: %v", err))
 		return
 	}
-	for i := range a.resourceValues {
-		err = a.resourceValues[i].Set(int(values[i]))
-		if err != nil {
-			slog.Error("Failed to set resource value", slog.Int("index", i), slog.Int("value", int(values[i])), slog.String("error", err.Error()))
-		}
+	for i := range a.resourceEntries {
+		a.resourceEntries[i].Set(values[i])
 	}
 }
 
@@ -167,14 +158,9 @@ func (a *App) applyStorageValues() {
 	if a.trainer == nil {
 		return
 	}
-	values := make([]int32, len(a.resourceValues))
-	for i := range a.resourceValues {
-		v, err := a.resourceValues[i].Get()
-		if err != nil {
-			a.DisplayError(fmt.Errorf("failed to get value for resource index %d: %v", i, err))
-			return
-		}
-		values[i] = int32(v)
+	values := make([]int32, trainer.ResourceCount)
+	for i := range a.resourceEntries {
+		values[i] = a.resourceEntries[i].Get()
 	}
 	err := a.trainer.WriteStorageValues(values)
 	if err != nil {
@@ -188,15 +174,10 @@ func (a *App) freezeSelectedValues() {
 		return
 	}
 
-	values := make([]trainer.IndexedValue, 0, len(a.resourceValues))
-	for i, check := range a.resourceFreezeChecks {
-		if check.Checked {
-			v, err := a.resourceValues[i].Get()
-			if err != nil {
-				a.DisplayError(fmt.Errorf("failed to get value for resource index %d: %v", i, err))
-				return
-			}
-			values = append(values, trainer.IndexedValue{Index: uint64(i), Value: int32(v)})
+	values := make([]trainer.IndexedValue, 0, trainer.ResourceCount)
+	for i, entry := range a.resourceEntries {
+		if entry.Checkbox.Checked {
+			values = append(values, trainer.IndexedValue{Index: uint64(math.Abs(float64(i))), Value: a.resourceEntries[i].Get()})
 		}
 	}
 	if len(values) == 0 {
