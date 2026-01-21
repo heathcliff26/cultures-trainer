@@ -98,7 +98,12 @@ func (a *App) initContent() {
 	applyButton := widget.NewButton("Apply", a.applyStorageValues)
 	a.freezeButton = widget.NewButton(freezeButtonTextFreeze, a.freezeSelectedValues)
 
-	runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton))
+	aboutButton := widget.NewButton("About", func() {
+		content := getVersionContent(a.version)
+		dialog.ShowCustom("About "+a.version.Name, "Close", newBorder(content), a.main)
+	})
+
+	runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
 	runBlock.Hide()
 
 	startButton.OnTapped = func() {

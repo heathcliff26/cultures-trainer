@@ -64,6 +64,35 @@ func getVersion(app fyne.App) Version {
 	}
 }
 
+// Create the content for the version dialog
+func getVersionContent(v Version) fyne.CanvasObject {
+	data := [][]string{
+		{"Version:", v.Version},
+		{"Commit:", v.Commit},
+		{"Go:", v.Go},
+	}
+
+	versionTable := widget.NewTable(
+		func() (int, int) {
+			return len(data), len(data[0])
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("                ")
+		},
+		func(i widget.TableCellID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(data[i.Row][i.Col])
+		},
+	)
+
+	versionTable.ShowHeaderRow = false
+	versionTable.ShowHeaderColumn = false
+	versionTable.StickyRowCount = len(data) - 1
+	versionTable.StickyColumnCount = len(data[0]) - 1
+	versionTable.HideSeparators = true
+
+	return versionTable
+}
+
 // Wrap the objects in a box with border lines
 func newBorder(content ...fyne.CanvasObject) fyne.CanvasObject {
 	contentContainer := container.NewThemeOverride(container.NewPadded(content...), theme.DefaultTheme())
