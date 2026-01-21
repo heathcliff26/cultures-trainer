@@ -59,7 +59,7 @@
 				
 				<option value="file1">github.com/heathcliff26/cultures-trainer/pkg/app/theme.go (0.0%)</option>
 				
-				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (72.0%)</option>
+				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (50.0%)</option>
 				
 				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (92.5%)</option>
 				
@@ -181,7 +181,12 @@ func (a *App) initContent() <span class="cov0" title="0">{
         applyButton := widget.NewButton("Apply", a.applyStorageValues)
         a.freezeButton = widget.NewButton(freezeButtonTextFreeze, a.freezeSelectedValues)
 
-        runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton))
+        aboutButton := widget.NewButton("About", func() </span><span class="cov0" title="0">{
+                content := getVersionContent(a.version)
+                dialog.ShowCustom("About "+a.version.Name, "Close", newBorder(content), a.main)
+        }</span>)
+
+        <span class="cov0" title="0">runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
         runBlock.Hide()
 
         startButton.OnTapped = func() </span><span class="cov0" title="0">{
@@ -397,6 +402,35 @@ func getVersion(app fyne.App) Version <span class="cov8" title="1">{
                 Commit:  commit,
                 Go:      runtime.Version(),
         }</span>
+}
+
+// Create the content for the version dialog
+func getVersionContent(v Version) fyne.CanvasObject <span class="cov0" title="0">{
+        data := [][]string{
+                {"Version:", v.Version},
+                {"Commit:", v.Commit},
+                {"Go:", v.Go},
+        }
+
+        versionTable := widget.NewTable(
+                func() (int, int) </span><span class="cov0" title="0">{
+                        return len(data), len(data[0])
+                }</span>,
+                func() fyne.CanvasObject <span class="cov0" title="0">{
+                        return widget.NewLabel("                ")
+                }</span>,
+                func(i widget.TableCellID, o fyne.CanvasObject) <span class="cov0" title="0">{
+                        o.(*widget.Label).SetText(data[i.Row][i.Col])
+                }</span>,
+        )
+
+        <span class="cov0" title="0">versionTable.ShowHeaderRow = false
+        versionTable.ShowHeaderColumn = false
+        versionTable.StickyRowCount = len(data) - 1
+        versionTable.StickyColumnCount = len(data[0]) - 1
+        versionTable.HideSeparators = true
+
+        return versionTable</span>
 }
 
 // Wrap the objects in a box with border lines
