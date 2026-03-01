@@ -3,9 +3,9 @@ module github.com/heathcliff26/cultures-trainer
 go 1.24.0
 
 require (
-	fyne.io/fyne/v2 v2.7.2
+	fyne.io/fyne/v2 v2.7.3
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sys v0.40.0
+	golang.org/x/sys v0.41.0
 )
 
 require (
@@ -26,7 +26,7 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-text/render v0.2.0 // indirect
-	github.com/go-text/typesetting v0.2.1 // indirect
+	github.com/go-text/typesetting v0.3.3 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/hack-pad/go-indexeddb v0.3.2 // indirect
