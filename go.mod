@@ -5,12 +5,12 @@ go 1.25.0
 require (
 	fyne.io/fyne/v2 v2.7.3
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sys v0.42.0
+	golang.org/x/sys v0.43.0
 )
 
 require (
 	fyne.io/systray v1.12.0 // indirect
-	fyne.io/tools v1.7.0 // indirect
+	fyne.io/tools v1.7.1 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
