@@ -1,7 +1,7 @@
 [![CI](https://github.com/heathcliff26/cultures-trainer/actions/workflows/ci.yaml/badge.svg?event=push)](https://github.com/heathcliff26/cultures-trainer/actions/workflows/ci.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/heathcliff26/cultures-trainer/badge.svg)](https://coveralls.io/github/heathcliff26/cultures-trainer)
 [![Editorconfig Check](https://github.com/heathcliff26/cultures-trainer/actions/workflows/editorconfig-check.yaml/badge.svg?event=push)](https://github.com/heathcliff26/cultures-trainer/actions/workflows/editorconfig-check.yaml)
-[![Generate go test cover report](https://github.com/heathcliff26/cultures-trainer/actions/workflows/go-testcover-report.yaml/badge.svg)](https://github.com/heathcliff26/cultures-trainer/actions/workflows/go-testcover-report.yaml)
+[![Coverprofiles](https://github.com/heathcliff26/cultures-trainer/actions/workflows/coverprofiles.yaml/badge.svg)](https://github.com/heathcliff26/cultures-trainer/actions/workflows/coverprofiles.yaml)
 
 # Cultures Trainer
 

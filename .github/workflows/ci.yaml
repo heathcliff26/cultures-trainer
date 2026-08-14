@@ -28,7 +28,7 @@ jobs:
     permissions:
       contents: read
     with:
-      cmd: "hack/containerized 'make lint'"
+      cmd: hack/containerized make lint
 
   gosec:
     uses: heathcliff26/ci/.github/workflows/golang-gosec.yaml@main
@@ -41,8 +41,7 @@ jobs:
     permissions:
       contents: read
     with:
-      cmd: "hack/containerized 'make test'"
-      os: ubuntu-latest
+      cmd: hack/containerized make test
       coveralls: ${{ github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
 
   validate:
@@ -63,5 +62,5 @@ jobs:
     with:
       artifact: "dist/cultures-trainer.tar.gz"
       artifact-name: "cultures-trainer"
-      cmd: "hack/containerized 'make build'"
+      cmd: hack/containerized make build
       release: ${{ inputs.release || false }}
