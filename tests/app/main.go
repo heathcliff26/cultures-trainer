@@ -13,8 +13,8 @@ import (
 var globalResources []int32 = make([]int32, trainer.ResourceCount)
 
 func main() {
-	globalResources[0] = 400
-	globalResources[7] = 500
+	globalResources[0] = 400 // Nahrung
+	globalResources[7] = 500 // Holz
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
