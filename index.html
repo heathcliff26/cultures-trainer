@@ -59,13 +59,13 @@
 				
 				<option value="file1">github.com/heathcliff26/cultures-trainer/pkg/app/theme.go (0.0%)</option>
 				
-				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (50.0%)</option>
+				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (42.0%)</option>
 				
-				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (92.5%)</option>
+				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (95.2%)</option>
 				
 				<option value="file4">github.com/heathcliff26/cultures-trainer/pkg/trainer/const.go (100.0%)</option>
 				
-				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (13.8%)</option>
+				<option value="file5">github.com/heathcliff26/cultures-trainer/pkg/trainer/trainer.go (20.4%)</option>
 				
 				<option value="file6">github.com/heathcliff26/cultures-trainer/pkg/trainer/utils.go (0.0%)</option>
 				
@@ -116,59 +116,59 @@ type App struct {
         freezeButton         *widget.Button
 }
 
-func New() *App <span class="cov0" title="0">{
-        app := newApp()
+func New() *App {
+        <span class="cov0" title="0">app := newApp()
         version := getVersion(app)
         main := app.NewWindow(version.Name)
-
-        a := &amp;App{
+</span>
+        <span class="cov0" title="0">a := &amp;App{
                 app:             app,
                 main:            main,
                 version:         version,
                 resourceEntries: make([]*Int32Entry, trainer.ResourceCount),
-        }
+</span>        }
 
-        a.initContent()
-
-        a.main.SetTitle(version.Name)
+        <span class="cov0" title="0">a.initContent()
+</span>
+        <span class="cov0" title="0">a.main.SetTitle(version.Name)
         a.main.SetFixedSize(true)
         a.main.Resize(fyne.NewSquareSize(400))
         a.main.Show()
         return a
-}</span>
+</span>}
 
 // Simply calls app.Run
-func (a *App) Run() <span class="cov0" title="0">{
-        a.app.Run()
-}</span>
+func (a *App) Run() {
+        <span class="cov0" title="0">a.app.Run()
+</span>}
 
-func (a *App) DisplayError(err error) <span class="cov0" title="0">{
-        dialog.ShowError(err, a.main)
-}</span>
+func (a *App) DisplayError(err error) {
+        <span class="cov0" title="0">dialog.ShowError(err, a.main)
+</span>}
 
-func (a *App) initContent() <span class="cov0" title="0">{
-        a.storageAddressEntry = widget.NewEntry()
+func (a *App) initContent() {
+        <span class="cov0" title="0">a.storageAddressEntry = widget.NewEntry()
         a.storageAddressEntry.SetText("0x0000000")
-        a.storageAddressEntry.Validator = func(s string) error </span><span class="cov0" title="0">{
-                _, err := hexStringToUint64(s)
+        a.storageAddressEntry.Validator = func(s string) error </span>{
+                <span class="cov0" title="0">_, err := hexStringToUint64(s)
                 return err
-        }</span>
+</span>        }
         <span class="cov0" title="0">storageAddressInput := container.NewVBox(widget.NewLabel(minimumLengthString("Storage Address", 20)), a.storageAddressEntry)
-
-        storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) </span><span class="cov0" title="0">{
-                offset := trainer.StorageIndexes[s]
-                // #nosec G115 -- The indexes are guaranteed to be positive.
-                a.storageAddressOffset = uint64(offset)
-        }</span>)
+</span>
+        <span class="cov0" title="0">storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) </span>{
+                <span class="cov0" title="0">offset := trainer.StorageIndexes[s]
+</span>                // #nosec G115 -- The indexes are guaranteed to be positive.
+                <span class="cov0" title="0">a.storageAddressOffset = uint64(offset)
+</span>        })
         <span class="cov0" title="0">storageAddressTypeSelect.SetSelectedIndex(7)
         storageAddressType := container.NewVBox(widget.NewLabel(minimumLengthString("Resource Name", 30)), storageAddressTypeSelect)
-
-        startButton := widget.NewButton("Start Trainer", func() </span>{<span class="cov0" title="0">}</span>)
+</span>
+        <span class="cov0" title="0">startButton := widget.NewButton("Start Trainer", func() </span>{<span class="cov0" title="0"></span>})
 
         <span class="cov0" title="0">setupBlock := container.NewHBox(storageAddressType, storageAddressInput)
         setupBlock = container.NewVBox(setupBlock, startButton)
-
-        storageCategories := newBorder(container.NewHBox(
+</span>
+        <span class="cov0" title="0">storageCategories := newBorder(container.NewHBox(
                 a.initStorageCategory("Nahrung", trainer.CategoryNahrung),
                 a.initStorageCategory("Bauwaren", trainer.CategoryBauwaren),
                 a.initStorageCategory("Resourcen", trainer.CategoryResourcen),
@@ -176,33 +176,33 @@ func (a *App) initContent() <span class="cov0" title="0">{
                 a.initStorageCategory("Bonusgegenstände", trainer.CategoryBonus),
                 a.initStorageCategory("Sonstiges", trainer.CategorySonstiges),
         ))
-
-        refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)
+</span>
+        <span class="cov0" title="0">refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)
         applyButton := widget.NewButton("Apply", a.applyStorageValues)
         a.freezeButton = widget.NewButton(freezeButtonTextFreeze, a.freezeSelectedValues)
-
-        aboutButton := widget.NewButton("About", func() </span><span class="cov0" title="0">{
-                content := getVersionContent(a.version)
+</span>
+        <span class="cov0" title="0">aboutButton := widget.NewButton("About", func() </span>{
+                <span class="cov0" title="0">content := getVersionContent(a.version)
                 dialog.ShowCustom("About "+a.version.Name, "Close", newBorder(content), a.main)
-        }</span>)
+</span>        })
 
         <span class="cov0" title="0">runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
         runBlock.Hide()
-
-        startButton.OnTapped = func() </span><span class="cov0" title="0">{
-                storageAddress, err := hexStringToUint64(a.storageAddressEntry.Text)
-                if err != nil </span><span class="cov0" title="0">{
-                        a.DisplayError(fmt.Errorf("invalid storage address: %v", err))
+</span>
+        <span class="cov0" title="0">startButton.OnTapped = func() </span>{
+                <span class="cov0" title="0">storageAddress, err := hexStringToUint64(a.storageAddressEntry.Text)
+                if err != nil </span>{
+                        <span class="cov0" title="0">a.DisplayError(fmt.Errorf("invalid storage address: %v", err))
                         return
-                }</span>
+</span>                }
                 <span class="cov0" title="0">t, err := trainer.NewTrainer(storageAddress - a.storageAddressOffset*4)
-                if err != nil </span><span class="cov0" title="0">{
-                        a.DisplayError(fmt.Errorf("failed to initialize trainer, is the game running?\nError: %v", err))
+                if err != nil </span>{
+                        <span class="cov0" title="0">a.DisplayError(fmt.Errorf("failed to initialize trainer, is the game running?\nError: %v", err))
                         return
-                }</span>
+</span>                }
                 <span class="cov0" title="0">a.trainer = t
-
-                a.refreshStorageValues()
+</span>
+                <span class="cov0" title="0">a.refreshStorageValues()
                 setupBlock.Hide()
                 runBlock.Show()</span>
         }
@@ -210,92 +210,92 @@ func (a *App) initContent() <span class="cov0" title="0">{
         <span class="cov0" title="0">a.main.SetContent(container.NewVBox(setupBlock, runBlock))</span>
 }
 
-func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject <span class="cov0" title="0">{
-        obj := make([]fyne.CanvasObject, len(items))
-        categoryCheckbox := widget.NewCheck(name, func(b bool) </span><span class="cov0" title="0">{
-                for _, item := range items </span><span class="cov0" title="0">{
-                        index := trainer.StorageIndexes[item]
+func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject {
+        <span class="cov0" title="0">obj := make([]fyne.CanvasObject, len(items))
+        categoryCheckbox := widget.NewCheck(name, func(b bool) </span>{
+                <span class="cov0" title="0">for _, item := range items </span>{
+                        <span class="cov0" title="0">index := trainer.StorageIndexes[item]
                         a.resourceEntries[index].Checkbox.SetChecked(b)
-                }</span>
+</span>                }
         })
-        <span class="cov0" title="0">categoryIncreaseButton := widget.NewButton("+", func() </span><span class="cov0" title="0">{
-                for _, item := range items </span><span class="cov0" title="0">{
-                        index := trainer.StorageIndexes[item]
+        <span class="cov0" title="0">categoryIncreaseButton := widget.NewButton("+", func() </span>{
+                <span class="cov0" title="0">for _, item := range items </span>{
+                        <span class="cov0" title="0">index := trainer.StorageIndexes[item]
                         a.resourceEntries[index].Increase()
-                }</span>
+</span>                }
         })
-        <span class="cov0" title="0">categoryDecreaseButton := widget.NewButton("-", func() </span><span class="cov0" title="0">{
-                for _, item := range items </span><span class="cov0" title="0">{
-                        index := trainer.StorageIndexes[item]
+        <span class="cov0" title="0">categoryDecreaseButton := widget.NewButton("-", func() </span>{
+                <span class="cov0" title="0">for _, item := range items </span>{
+                        <span class="cov0" title="0">index := trainer.StorageIndexes[item]
                         a.resourceEntries[index].Decrease()
-                }</span>
+</span>                }
         })
-        <span class="cov0" title="0">for i, item := range items </span><span class="cov0" title="0">{
-                index := trainer.StorageIndexes[item]
+        <span class="cov0" title="0">for i, item := range items </span>{
+                <span class="cov0" title="0">index := trainer.StorageIndexes[item]
                 a.resourceEntries[index] = NewInt32Entry(item)
                 obj[i] = a.resourceEntries[index]
-        }</span>
+</span>        }
         <span class="cov0" title="0">return container.NewVBox(container.NewHBox(categoryCheckbox, layout.NewSpacer(), categoryIncreaseButton, categoryDecreaseButton), newBorder(container.NewVBox(obj...)))</span>
 }
 
-func (a *App) refreshStorageValues() <span class="cov0" title="0">{
-        if a.trainer == nil </span><span class="cov0" title="0">{
-                return
-        }</span>
+func (a *App) refreshStorageValues() {
+        <span class="cov0" title="0">if a.trainer == nil </span>{
+                <span class="cov0" title="0">return
+</span>        }
 
         <span class="cov0" title="0">values, err := a.trainer.ReadStorageValues()
-        if err != nil </span><span class="cov0" title="0">{
-                a.DisplayError(fmt.Errorf("failed to read values from game: %v", err))
+        if err != nil </span>{
+                <span class="cov0" title="0">a.DisplayError(fmt.Errorf("failed to read values from game: %v", err))
                 return
-        }</span>
-        <span class="cov0" title="0">for i := range a.resourceEntries </span><span class="cov0" title="0">{
-                a.resourceEntries[i].Set(values[i])
-        }</span>
+</span>        }
+        <span class="cov0" title="0">for i := range a.resourceEntries </span>{
+                <span class="cov0" title="0">a.resourceEntries[i].Set(values[i])
+</span>        }
 }
 
-func (a *App) applyStorageValues() <span class="cov0" title="0">{
-        if a.trainer == nil </span><span class="cov0" title="0">{
-                return
-        }</span>
+func (a *App) applyStorageValues() {
+        <span class="cov0" title="0">if a.trainer == nil </span>{
+                <span class="cov0" title="0">return
+</span>        }
         <span class="cov0" title="0">values := make([]int32, trainer.ResourceCount)
-        for i := range a.resourceEntries </span><span class="cov0" title="0">{
-                values[i] = a.resourceEntries[i].Get()
-        }</span>
+        for i := range a.resourceEntries </span>{
+                <span class="cov0" title="0">values[i] = a.resourceEntries[i].Get()
+</span>        }
         <span class="cov0" title="0">err := a.trainer.WriteStorageValues(values)
-        if err != nil </span><span class="cov0" title="0">{
-                a.DisplayError(fmt.Errorf("failed to write values to game memory: %v", err))
+        if err != nil </span>{
+                <span class="cov0" title="0">a.DisplayError(fmt.Errorf("failed to write values to game memory: %v", err))
                 return
-        }</span>
+</span>        }
 }
 
-func (a *App) freezeSelectedValues() <span class="cov0" title="0">{
-        if a.trainer == nil </span><span class="cov0" title="0">{
-                return
-        }</span>
+func (a *App) freezeSelectedValues() {
+        <span class="cov0" title="0">if a.trainer == nil </span>{
+                <span class="cov0" title="0">return
+</span>        }
 
         <span class="cov0" title="0">values := make([]trainer.IndexedValue, 0, trainer.ResourceCount)
-        for i, entry := range a.resourceEntries </span><span class="cov0" title="0">{
-                if entry.Checkbox.Checked </span><span class="cov0" title="0">{
-                        values = append(values, trainer.IndexedValue{Index: i, Value: a.resourceEntries[i].Get()})
-                }</span>
+        for i, entry := range a.resourceEntries </span>{
+                <span class="cov0" title="0">if entry.Checkbox.Checked </span>{
+                        <span class="cov0" title="0">values = append(values, trainer.IndexedValue{Index: i, Value: a.resourceEntries[i].Get()})
+</span>                }
         }
-        <span class="cov0" title="0">if len(values) == 0 </span><span class="cov0" title="0">{
-                a.DisplayError(fmt.Errorf("no values selected to freeze"))
+        <span class="cov0" title="0">if len(values) == 0 </span>{
+                <span class="cov0" title="0">a.DisplayError(fmt.Errorf("no values selected to freeze"))
                 return
-        }</span>
+</span>        }
         <span class="cov0" title="0">a.trainer.FreezeStorageValues(values)
-
-        a.freezeButton.Text = freezeButtonTextUnfreeze
+</span>
+        <span class="cov0" title="0">a.freezeButton.Text = freezeButtonTextUnfreeze
         a.freezeButton.OnTapped = a.unfreezeValues</span>
 }
 
-func (a *App) unfreezeValues() <span class="cov0" title="0">{
-        if a.trainer == nil </span><span class="cov0" title="0">{
-                return
-        }</span>
+func (a *App) unfreezeValues() {
+        <span class="cov0" title="0">if a.trainer == nil </span>{
+                <span class="cov0" title="0">return
+</span>        }
         <span class="cov0" title="0">a.trainer.UnfreezeStorageValues()
-
-        a.freezeButton.Text = freezeButtonTextFreeze
+</span>
+        <span class="cov0" title="0">a.freezeButton.Text = freezeButtonTextFreeze
         a.freezeButton.OnTapped = a.freezeSelectedValues</span>
 }
 </pre>
@@ -313,25 +313,25 @@ var _ fyne.Theme = borderTheme{}
 
 type borderTheme struct{}
 
-func (borderTheme) Font(style fyne.TextStyle) fyne.Resource <span class="cov0" title="0">{
-        return theme.DefaultTheme().Font(style)
-}</span>
+func (borderTheme) Font(style fyne.TextStyle) fyne.Resource {
+        <span class="cov0" title="0">return theme.DefaultTheme().Font(style)
+</span>}
 
-func (borderTheme) Icon(name fyne.ThemeIconName) fyne.Resource <span class="cov0" title="0">{
-        return theme.DefaultTheme().Icon(name)
-}</span>
+func (borderTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
+        <span class="cov0" title="0">return theme.DefaultTheme().Icon(name)
+</span>}
 
-func (borderTheme) Size(name fyne.ThemeSizeName) float32 <span class="cov0" title="0">{
-        return theme.DefaultTheme().Size(name)
-}</span>
+func (borderTheme) Size(name fyne.ThemeSizeName) float32 {
+        <span class="cov0" title="0">return theme.DefaultTheme().Size(name)
+</span>}
 
-func (borderTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color <span class="cov0" title="0">{
-        if name == theme.ColorNameShadow </span><span class="cov0" title="0">{
-                switch variant </span>{
-                case theme.VariantLight:<span class="cov0" title="0">
-                        return color.Black</span>
-                case theme.VariantDark:<span class="cov0" title="0">
-                        return color.White</span>
+func (borderTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
+        <span class="cov0" title="0">if name == theme.ColorNameShadow </span>{
+                <span class="cov0" title="0">switch variant </span>{
+                case theme.VariantLight:
+                        <span class="cov0" title="0">return color.Black</span>
+                case theme.VariantDark:
+                        <span class="cov0" title="0">return color.White</span>
                 }
         }
         <span class="cov0" title="0">return theme.DefaultTheme().Color(name, variant)</span>
@@ -359,17 +359,17 @@ import (
 // directory.  See also https://git-scm.com/docs/gitattributes
 var gitCommit string = "$Format:%H$" // sha1 from git, output of $(git rev-parse HEAD)
 
-func init() <span class="cov8" title="1">{
-        initGitCommit()
-}</span>
+func init() {
+        <span class="cov8" title="1">initGitCommit()
+</span>}
 
-func initGitCommit() <span class="cov8" title="1">{
-        if strings.HasPrefix(gitCommit, "$Format") </span><span class="cov8" title="1">{
-                var commit string
+func initGitCommit() {
+        <span class="cov8" title="1">if strings.HasPrefix(gitCommit, "$Format") </span>{
+                <span class="cov8" title="1">var commit string
                 buildinfo, _ := debug.ReadBuildInfo()
-                for _, item := range buildinfo.Settings </span><span class="cov8" title="1">{
-                        if item.Key == "vcs.revision" </span><span class="cov0" title="0">{
-                                commit = item.Value
+                for _, item := range buildinfo.Settings </span>{
+                        <span class="cov8" title="1">if item.Key == "vcs.revision" </span>{
+                                <span class="cov0" title="0">commit = item.Value
                                 break</span>
                         }
                 }
@@ -383,45 +383,45 @@ type Version struct {
 }
 
 // Extract the version information from app
-func getVersion(app fyne.App) Version <span class="cov8" title="1">{
-        commit := gitCommit
-        if len(commit) &gt; 7 </span><span class="cov8" title="1">{
-                commit = commit[:7]
-        }</span>
+func getVersion(app fyne.App) Version {
+        <span class="cov8" title="1">commit := gitCommit
+        if len(commit) &gt; 7 </span>{
+                <span class="cov8" title="1">commit = commit[:7]
+</span>        }
 
         <span class="cov8" title="1">metadata := app.Metadata()
-
-        name, _ := strings.CutSuffix(metadata.Name, ".exe")
-        if name == "" </span><span class="cov8" title="1">{
-                name = filepath.Base(os.Args[0])
-        }</span>
+</span>
+        <span class="cov8" title="1">name, _ := strings.CutSuffix(metadata.Name, ".exe")
+        if name == "" </span>{
+                <span class="cov8" title="1">name = filepath.Base(os.Args[0])
+</span>        }
 
         <span class="cov8" title="1">return Version{
                 Name:    name,
                 Version: "v" + metadata.Version,
                 Commit:  commit,
                 Go:      runtime.Version(),
-        }</span>
+</span>        }
 }
 
 // Create the content for the version dialog
-func getVersionContent(v Version) fyne.CanvasObject <span class="cov0" title="0">{
-        data := [][]string{
+func getVersionContent(v Version) fyne.CanvasObject {
+        <span class="cov0" title="0">data := [][]string{
                 {"Version:", v.Version},
                 {"Commit:", v.Commit},
                 {"Go:", v.Go},
-        }
+</span>        }
 
-        versionTable := widget.NewTable(
-                func() (int, int) </span><span class="cov0" title="0">{
-                        return len(data), len(data[0])
-                }</span>,
-                func() fyne.CanvasObject <span class="cov0" title="0">{
-                        return widget.NewLabel("                ")
-                }</span>,
-                func(i widget.TableCellID, o fyne.CanvasObject) <span class="cov0" title="0">{
-                        o.(*widget.Label).SetText(data[i.Row][i.Col])
-                }</span>,
+        <span class="cov0" title="0">versionTable := widget.NewTable(
+                func() (int, int) </span>{
+                        <span class="cov0" title="0">return len(data), len(data[0])
+</span>                },
+                func() fyne.CanvasObject {
+                        <span class="cov0" title="0">return widget.NewLabel("                ")
+</span>                },
+                func(i widget.TableCellID, o fyne.CanvasObject) {
+                        <span class="cov0" title="0">o.(*widget.Label).SetText(data[i.Row][i.Col])
+</span>                },
         )
 
         <span class="cov0" title="0">versionTable.ShowHeaderRow = false
@@ -429,31 +429,31 @@ func getVersionContent(v Version) fyne.CanvasObject <span class="cov0" title="0"
         versionTable.StickyRowCount = len(data) - 1
         versionTable.StickyColumnCount = len(data[0]) - 1
         versionTable.HideSeparators = true
-
-        return versionTable</span>
+</span>
+        <span class="cov0" title="0">return versionTable</span>
 }
 
 // Wrap the objects in a box with border lines
-func newBorder(content ...fyne.CanvasObject) fyne.CanvasObject <span class="cov0" title="0">{
-        contentContainer := container.NewThemeOverride(container.NewPadded(content...), theme.DefaultTheme())
+func newBorder(content ...fyne.CanvasObject) fyne.CanvasObject {
+        <span class="cov0" title="0">contentContainer := container.NewThemeOverride(container.NewPadded(content...), theme.DefaultTheme())
         border := widget.NewCard("", "", contentContainer)
-
-        return container.NewThemeOverride(border, borderTheme{})
-}</span>
+</span>
+        <span class="cov0" title="0">return container.NewThemeOverride(border, borderTheme{})
+</span>}
 
 // Ensures that the given string has at least the specified minimum length.
 // If the string is shorter than minLength, it is padded with spaces at the end.
-func minimumLengthString(str string, minLength int) string <span class="cov8" title="1">{
-        if len(str) &lt; minLength </span><span class="cov8" title="1">{
-                str += strings.Repeat(" ", minLength-len(str))
-        }</span>
+func minimumLengthString(str string, minLength int) string {
+        <span class="cov8" title="1">if len(str) &lt; minLength </span>{
+                <span class="cov8" title="1">str += strings.Repeat(" ", minLength-len(str))
+</span>        }
         <span class="cov8" title="1">return str</span>
 }
 
-func hexStringToUint64(hexStr string) (uint64, error) <span class="cov0" title="0">{
-        hexStr, _ = strings.CutPrefix(hexStr, "0x")
+func hexStringToUint64(hexStr string) (uint64, error) {
+        <span class="cov0" title="0">hexStr, _ = strings.CutPrefix(hexStr, "0x")
         return strconv.ParseUint(hexStr, 16, 64)
-}</span>
+</span>}
 </pre>
 		
 		<pre class="file" id="file3" style="display: none">package app
@@ -487,85 +487,85 @@ type Int32Entry struct {
 }
 
 // Create a new entry widget for int32 values with an associated checkbox.
-func NewInt32Entry(label string) *Int32Entry <span class="cov8" title="1">{
-        entry := widget.NewEntry()
+func NewInt32Entry(label string) *Int32Entry {
+        <span class="cov8" title="1">entry := widget.NewEntry()
         checkbox := widget.NewCheck(label, nil)
         increaseButton := widget.NewButton("+", nil)
         decreaseButton := widget.NewButton("-", nil)
-
-        e := &amp;Int32Entry{
+</span>
+        <span class="cov8" title="1">e := &amp;Int32Entry{
                 Entry:          entry,
                 Checkbox:       checkbox,
                 increaseButton: increaseButton,
                 decreaseButton: decreaseButton,
                 canvas:         container.NewVBox(container.NewHBox(checkbox, layout.NewSpacer(), increaseButton, decreaseButton), entry),
-        }
+</span>        }
 
-        e.Entry.Validator = func(s string) error </span><span class="cov8" title="1">{
-                _, err := strconv.ParseInt(s, 10, 32)
+        <span class="cov8" title="1">e.Entry.Validator = func(s string) error </span>{
+                <span class="cov8" title="1">_, err := strconv.ParseInt(s, 10, 32)
                 return err
-        }</span>
-        <span class="cov8" title="1">e.Entry.OnChanged = func(s string) </span><span class="cov8" title="1">{
-                if s == "" </span><span class="cov8" title="1">{
-                        e.value = 0
+</span>        }
+        <span class="cov8" title="1">e.Entry.OnChanged = func(s string) </span>{
+                <span class="cov8" title="1">if s == "" </span>{
+                        <span class="cov8" title="1">e.value = 0
                         return
-                }</span>
+</span>                }
                 <span class="cov8" title="1">i, err := strconv.ParseInt(s, 10, 32)
-                if err != nil </span><span class="cov8" title="1">{
-                        slog.Error("Failed to parse int32 from entry", slog.String("input", s), slog.String("error", err.Error()))
+                if err != nil </span>{
+                        <span class="cov8" title="1">slog.Error("Failed to parse int32 from entry", slog.String("input", s), slog.String("error", err.Error()))
                         return
-                }</span>
+</span>                }
                 <span class="cov8" title="1">e.value = int32(i)</span>
         }
         <span class="cov8" title="1">e.Set(0)
-
-        e.increaseButton.OnTapped = e.Increase
+</span>
+        <span class="cov8" title="1">e.increaseButton.OnTapped = e.Increase
         e.decreaseButton.OnTapped = e.Decrease
-
-        e.ExtendBaseWidget(e)
+</span>
+        <span class="cov8" title="1">e.ExtendBaseWidget(e)
         return e</span>
 }
 
-func (e *Int32Entry) CreateRenderer() fyne.WidgetRenderer <span class="cov0" title="0">{
-        return widget.NewSimpleRenderer(e.canvas)
-}</span>
+func (e *Int32Entry) CreateRenderer() fyne.WidgetRenderer {
+        <span class="cov0" title="0">return widget.NewSimpleRenderer(e.canvas)
+</span>}
 
 // Set the int32 value of the entry.
-func (e *Int32Entry) Set(v int32) <span class="cov8" title="1">{
-        e.value = v
+func (e *Int32Entry) Set(v int32) {
+        <span class="cov8" title="1">e.value = v
         e.Entry.SetText(fmt.Sprintf("%d", e.value))
-}</span>
+</span>}
 
 // Get the int32 value of the entry.
-func (e *Int32Entry) Get() int32 <span class="cov8" title="1">{
-        return e.value
-}</span>
+func (e *Int32Entry) Get() int32 {
+        <span class="cov8" title="1">return e.value
+</span>}
 
 // Increase the value by a set amount up to the defined maximum.
 // First call will increase it up to the nearest multiple of the step size.
-func (e *Int32Entry) Increase() <span class="cov8" title="1">{
-        v := e.Get() + increaseDecreaseStepSize
+func (e *Int32Entry) Increase() {
+        <span class="cov8" title="1">v := e.Get() + increaseDecreaseStepSize
         m := v % increaseDecreaseStepSize
         v -= m
-        if v &gt; maxResourceValue </span><span class="cov0" title="0">{
-                v = maxResourceValue
-        }</span>
+        if v &gt; maxResourceValue </span>{
+                <span class="cov0" title="0">v = maxResourceValue
+</span>        }
         <span class="cov8" title="1">e.Set(v)</span>
 }
 
 // Decrease the value by a set amount up to 0.
 // First call will decrease it down to the nearest multiple of the step size.
-func (e *Int32Entry) Decrease() <span class="cov8" title="1">{
-        v := e.Get()
+func (e *Int32Entry) Decrease() {
+        <span class="cov8" title="1">v := e.Get()
         m := v % increaseDecreaseStepSize
-        if m == 0 </span><span class="cov8" title="1">{
-                v -= increaseDecreaseStepSize
-        }</span> else<span class="cov8" title="1"> {
-                v -= m
-        }</span>
-        <span class="cov8" title="1">if v &lt; 0 </span><span class="cov0" title="0">{
-                v = 0
-        }</span>
+        if m == 0 </span>{
+                <span class="cov8" title="1">v -= increaseDecreaseStepSize
+</span>        } else {
+                <span class="cov8" title="1">v -= m
+</span>        }
+        <span class="cov8" title="1">if v &lt; 0 </span>{
+                <span class="cov0" title="0">v = 0
+</span>        }
         <span class="cov8" title="1">e.Set(v)</span>
 }
 </pre>
@@ -695,13 +695,13 @@ var CategorySonstiges = []string{
         "Windamulett",
 }
 
-func init() <span class="cov8" title="1">{
-        ResourceCount = len(StorageLocations)
+func init() {
+        <span class="cov8" title="1">ResourceCount = len(StorageLocations)
         StorageIndexes = make(map[string]int, ResourceCount)
-
-        for i, name := range StorageLocations </span><span class="cov8" title="1">{
-                StorageIndexes[name] = i
-        }</span>
+</span>
+        <span class="cov8" title="1">for i, name := range StorageLocations </span>{
+                <span class="cov8" title="1">StorageIndexes[name] = i
+</span>        }
 }
 </pre>
 		
@@ -730,11 +730,11 @@ type IndexedValue struct {
         Value int32
 }
 
-func NewTrainer(storageAddress uint64) (*Trainer, error) <span class="cov0" title="0">{
-        pid, err := findProcessByName("Game.exe")
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
-        }</span>
+func NewTrainer(storageAddress uint64) (*Trainer, error) {
+        <span class="cov0" title="0">pid, err := findProcessByName("Game.exe")
+        if err != nil </span>{
+                <span class="cov0" title="0">return nil, err
+</span>        }
         <span class="cov0" title="0">slog.Info("Found game pid", slog.Int("pid", pid))
         return &amp;Trainer{
                 pid:            pid,
@@ -742,68 +742,68 @@ func NewTrainer(storageAddress uint64) (*Trainer, error) <span class="cov0" titl
         }, nil</span>
 }
 
-func (t *Trainer) ReadStorageValues() ([]int32, error) <span class="cov0" title="0">{
-        res := make([]int32, len(StorageLocations))
+func (t *Trainer) ReadStorageValues() ([]int32, error) {
+        <span class="cov0" title="0">res := make([]int32, len(StorageLocations))
         local := make([]unix.Iovec, len(res))
         remote := make([]unix.RemoteIovec, len(res))
-        for i := range res </span><span class="cov0" title="0">{
-                local[i], remote[i] = t.createIovecPair(i, &amp;res[i])
-        }</span>
+        for i := range res </span>{
+                <span class="cov0" title="0">local[i], remote[i] = t.createIovecPair(i, &amp;res[i])
+</span>        }
         <span class="cov0" title="0">c, err := unix.ProcessVMReadv(t.pid, local, remote, 0)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
-        }</span>
+        if err != nil </span>{
+                <span class="cov0" title="0">return nil, err
+</span>        }
         <span class="cov0" title="0">slog.Info("Refreshed storage values from game memory", slog.Int("bytesCopied", c), slog.Any("result", res))
         return res, nil</span>
 }
 
-func (t *Trainer) WriteStorageValues(values []int32) error <span class="cov0" title="0">{
-        local := make([]unix.Iovec, len(values))
+func (t *Trainer) WriteStorageValues(values []int32) error {
+        <span class="cov0" title="0">local := make([]unix.Iovec, len(values))
         remote := make([]unix.RemoteIovec, len(values))
-        for i := range values </span><span class="cov0" title="0">{
-                local[i], remote[i] = t.createIovecPair(i, &amp;values[i])
-        }</span>
+        for i := range values </span>{
+                <span class="cov0" title="0">local[i], remote[i] = t.createIovecPair(i, &amp;values[i])
+</span>        }
 
         <span class="cov0" title="0">c, err := unix.ProcessVMWritev(t.pid, local, remote, 0)
         slog.Info("Wrote storage values to game memory", slog.Int("bytesCopied", c))
         return err</span>
 }
 
-func (t *Trainer) FreezeStorageValues(values []IndexedValue) <span class="cov0" title="0">{
-        if t.stop != nil </span><span class="cov0" title="0">{
-                t.UnfreezeStorageValues()
-        }</span>
+func (t *Trainer) FreezeStorageValues(values []IndexedValue) {
+        <span class="cov0" title="0">if t.stop != nil </span>{
+                <span class="cov0" title="0">t.UnfreezeStorageValues()
+</span>        }
         <span class="cov0" title="0">t.stop = make(chan struct{})
         t.stopped = make(chan struct{})
-
-        go func() </span><span class="cov0" title="0">{
-                slog.Info("Started freezing values")
+</span>
+        <span class="cov0" title="0">go func() </span>{
+                <span class="cov0" title="0">slog.Info("Started freezing values")
                 defer close(t.stopped)
-
-                ticker := time.NewTicker(freezeWriteInterval)
+</span>
+                <span class="cov0" title="0">ticker := time.NewTicker(freezeWriteInterval)
                 defer ticker.Stop()
-
-                local := make([]unix.Iovec, len(values))
+</span>
+                <span class="cov0" title="0">local := make([]unix.Iovec, len(values))
                 remote := make([]unix.RemoteIovec, len(values))
+</span>
+                <span class="cov0" title="0">for i, value := range values </span>{
+                        <span class="cov0" title="0">local[i], remote[i] = t.createIovecPair(value.Index, &amp;value.Value)
+</span>                }
 
-                for i, value := range values </span><span class="cov0" title="0">{
-                        local[i], remote[i] = t.createIovecPair(value.Index, &amp;value.Value)
-                }</span>
-
-                <span class="cov0" title="0">for </span><span class="cov0" title="0">{
-                        select </span>{
-                        case &lt;-t.stop:<span class="cov0" title="0">
-                                slog.Info("Stopped freezing values")
+                <span class="cov0" title="0">for </span>{
+                        <span class="cov0" title="0">select </span>{
+                        case &lt;-t.stop:
+                                <span class="cov0" title="0">slog.Info("Stopped freezing values")
                                 return</span>
-                        case &lt;-ticker.C:<span class="cov0" title="0">
-                                _, err := unix.ProcessVMWritev(t.pid, local, remote, 0)
-                                if err != nil </span><span class="cov0" title="0">{
-                                        switch err.Error() </span>{
-                                        case "no such process":<span class="cov0" title="0">
-                                                slog.Error("Game process not found, stopping freeze", slog.String("error", err.Error()))
+                        case &lt;-ticker.C:
+                                <span class="cov0" title="0">_, err := unix.ProcessVMWritev(t.pid, local, remote, 0)
+                                if err != nil </span>{
+                                        <span class="cov0" title="0">switch err.Error() </span>{
+                                        case "no such process":
+                                                <span class="cov0" title="0">slog.Error("Game process not found, stopping freeze", slog.String("error", err.Error()))
                                                 return</span>
-                                        default:<span class="cov0" title="0">
-                                                slog.Error("Failed to write frozen values to game memory", slog.String("error", err.Error()))</span>
+                                        default:
+                                                <span class="cov0" title="0">slog.Error("Failed to write frozen values to game memory", slog.String("error", err.Error()))</span>
                                         }
                                 }
                         }
@@ -811,33 +811,33 @@ func (t *Trainer) FreezeStorageValues(values []IndexedValue) <span class="cov0" 
         }()
 }
 
-func (t *Trainer) UnfreezeStorageValues() <span class="cov0" title="0">{
-        if t.stop != nil </span><span class="cov0" title="0">{
-                close(t.stop)
+func (t *Trainer) UnfreezeStorageValues() {
+        <span class="cov0" title="0">if t.stop != nil </span>{
+                <span class="cov0" title="0">close(t.stop)
                 &lt;-t.stopped
                 t.stop = nil
                 t.stopped = nil
-        }</span>
+</span>        }
 }
 
-func (t *Trainer) createIovecPair(i int, value *int32) (unix.Iovec, unix.RemoteIovec) <span class="cov8" title="1">{
+func (t *Trainer) createIovecPair(i int, value *int32) (unix.Iovec, unix.RemoteIovec) {
         // #nosec G103 -- Intended and needed usage of unsafe for low-level memory access
-        p := (*byte)(unsafe.Pointer(value))
+        <span class="cov8" title="1">p := (*byte)(unsafe.Pointer(value))
         size := unsafe.Sizeof(*value)
-
-        if i &lt; 0 </span><span class="cov8" title="1">{
-                panic(fmt.Sprintf("index cannot be negative, but was %d", i))</span>
+</span>
+        <span class="cov8" title="1">if i &lt; 0 </span>{
+                <span class="cov8" title="1">panic(fmt.Sprintf("index cannot be negative, but was %d", i))</span>
         }
         <span class="cov8" title="1">iUint64 := uint64(i)
         local := unix.Iovec{
                 Base: p,
                 Len:  uint64(size),
-        }
-        remote := unix.RemoteIovec{
+</span>        }
+        <span class="cov8" title="1">remote := unix.RemoteIovec{
                 Base: uintptr(t.storageAddress + iUint64*uint64(size)),
                 Len:  int(size),
-        }
-        return local, remote</span>
+</span>        }
+        <span class="cov8" title="1">return local, remote</span>
 }
 </pre>
 		
@@ -852,28 +852,28 @@ import (
 
 const procDir = "/proc"
 
-func findProcessByName(name string) (int, error) <span class="cov0" title="0">{
-        procs, err := os.ReadDir(procDir)
-        if err != nil </span><span class="cov0" title="0">{
-                return 0, err
-        }</span>
+func findProcessByName(name string) (int, error) {
+        <span class="cov0" title="0">procs, err := os.ReadDir(procDir)
+        if err != nil </span>{
+                <span class="cov0" title="0">return 0, err
+</span>        }
 
-        <span class="cov0" title="0">for _, proc := range procs </span><span class="cov0" title="0">{
-                if !proc.IsDir() </span><span class="cov0" title="0">{
-                        continue</span>
+        <span class="cov0" title="0">for _, proc := range procs </span>{
+                <span class="cov0" title="0">if !proc.IsDir() </span>{
+                        <span class="cov0" title="0">continue</span>
                 }
                 <span class="cov0" title="0">data, err := os.ReadFile(fmt.Sprintf("%s/%s/stat", procDir, proc.Name()))
-                if err != nil </span><span class="cov0" title="0">{
-                        if os.IsNotExist(err) </span><span class="cov0" title="0">{
-                                continue</span>
+                if err != nil </span>{
+                        <span class="cov0" title="0">if os.IsNotExist(err) </span>{
+                                <span class="cov0" title="0">continue</span>
                         }
                         <span class="cov0" title="0">return 0, err</span>
                 }
                 <span class="cov0" title="0">stats := strings.Split(string(data), " ")
                 res := strings.Trim(stats[1], "()")
-                if res == name </span><span class="cov0" title="0">{
-                        return strconv.Atoi(proc.Name())
-                }</span>
+                if res == name </span>{
+                        <span class="cov0" title="0">return strconv.Atoi(proc.Name())
+</span>                }
         }
         <span class="cov0" title="0">return 0, fmt.Errorf("process %s not found", name)</span>
 }
