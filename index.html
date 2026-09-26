@@ -57,7 +57,7 @@
 				
 				<option value="file0">github.com/heathcliff26/cultures-trainer/pkg/app/app.go (0.0%)</option>
 				
-				<option value="file1">github.com/heathcliff26/cultures-trainer/pkg/app/theme.go (0.0%)</option>
+				<option value="file1">github.com/heathcliff26/cultures-trainer/pkg/app/theme.go (87.5%)</option>
 				
 				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (42.0%)</option>
 				
@@ -309,6 +309,11 @@ import (
         "fyne.io/fyne/v2/theme"
 )
 
+var (
+        borderShadowVariantLight = color.Black
+        borderShadowVariantDark  = color.RGBA{120, 120, 120, ^uint8(0)}
+)
+
 var _ fyne.Theme = borderTheme{}
 
 type borderTheme struct{}
@@ -318,23 +323,23 @@ func (borderTheme) Font(style fyne.TextStyle) fyne.Resource {
 </span>}
 
 func (borderTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
-        <span class="cov0" title="0">return theme.DefaultTheme().Icon(name)
+        <span class="cov8" title="1">return theme.DefaultTheme().Icon(name)
 </span>}
 
 func (borderTheme) Size(name fyne.ThemeSizeName) float32 {
-        <span class="cov0" title="0">return theme.DefaultTheme().Size(name)
+        <span class="cov8" title="1">return theme.DefaultTheme().Size(name)
 </span>}
 
 func (borderTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
-        <span class="cov0" title="0">if name == theme.ColorNameShadow </span>{
-                <span class="cov0" title="0">switch variant </span>{
+        <span class="cov8" title="1">if name == theme.ColorNameShadow </span>{
+                <span class="cov8" title="1">switch variant </span>{
                 case theme.VariantLight:
-                        <span class="cov0" title="0">return color.Black</span>
+                        <span class="cov8" title="1">return borderShadowVariantLight</span>
                 case theme.VariantDark:
-                        <span class="cov0" title="0">return color.White</span>
+                        <span class="cov8" title="1">return borderShadowVariantDark</span>
                 }
         }
-        <span class="cov0" title="0">return theme.DefaultTheme().Color(name, variant)</span>
+        <span class="cov8" title="1">return theme.DefaultTheme().Color(name, variant)</span>
 }
 </pre>
 		
