@@ -3,7 +3,7 @@ Website = "https://github.com/heathcliff26/cultures-trainer"
 [Details]
 Icon = "packages/io.github.heathcliff26.cultures-trainer.png"
 Name = "Cultures Trainer"
-ID = "com.github.heathcliff26.cultures-trainer"
+ID = "io.github.heathcliff26.cultures-trainer"
 Version = "0.2.1"
 Build = 1
 
