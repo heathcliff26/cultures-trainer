@@ -7,6 +7,11 @@ import (
 	"fyne.io/fyne/v2/theme"
 )
 
+var (
+	borderShadowVariantLight = color.Black
+	borderShadowVariantDark  = color.RGBA{120, 120, 120, ^uint8(0)}
+)
+
 var _ fyne.Theme = borderTheme{}
 
 type borderTheme struct{}
@@ -27,9 +32,9 @@ func (borderTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) co
 	if name == theme.ColorNameShadow {
 		switch variant {
 		case theme.VariantLight:
-			return color.Black
+			return borderShadowVariantLight
 		case theme.VariantDark:
-			return color.White
+			return borderShadowVariantDark
 		}
 	}
 	return theme.DefaultTheme().Color(name, variant)
