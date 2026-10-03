@@ -100,7 +100,7 @@ func (a *App) initContent() {
 
 	aboutButton := widget.NewButton("About", func() {
 		content := getVersionContent(a.version)
-		dialog.ShowCustom("About "+a.version.Name, "Close", newBorder(content), a.main)
+		dialog.ShowCustom("About "+a.version.Name, "Close", content, a.main)
 	})
 
 	runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
