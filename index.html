@@ -59,7 +59,7 @@
 				
 				<option value="file1">github.com/heathcliff26/cultures-trainer/pkg/app/theme.go (87.5%)</option>
 				
-				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (42.0%)</option>
+				<option value="file2">github.com/heathcliff26/cultures-trainer/pkg/app/utils.go (46.7%)</option>
 				
 				<option value="file3">github.com/heathcliff26/cultures-trainer/pkg/app/widgets.go (95.2%)</option>
 				
@@ -183,7 +183,7 @@ func (a *App) initContent() {
 </span>
         <span class="cov0" title="0">aboutButton := widget.NewButton("About", func() </span>{
                 <span class="cov0" title="0">content := getVersionContent(a.version)
-                dialog.ShowCustom("About "+a.version.Name, "Close", newBorder(content), a.main)
+                dialog.ShowCustom("About "+a.version.Name, "Close", content, a.main)
 </span>        })
 
         <span class="cov0" title="0">runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
@@ -417,23 +417,14 @@ func getVersionContent(v Version) fyne.CanvasObject {
                 {"Go:", v.Go},
 </span>        }
 
-        <span class="cov0" title="0">versionTable := widget.NewTable(
-                func() (int, int) </span>{
-                        <span class="cov0" title="0">return len(data), len(data[0])
-</span>                },
-                func() fyne.CanvasObject {
-                        <span class="cov0" title="0">return widget.NewLabel("                ")
-</span>                },
-                func(i widget.TableCellID, o fyne.CanvasObject) {
-                        <span class="cov0" title="0">o.(*widget.Label).SetText(data[i.Row][i.Col])
-</span>                },
-        )
+        <span class="cov0" title="0">description := container.NewVBox()
+        values := container.NewVBox()
+        for _, row := range data </span>{
+                <span class="cov0" title="0">description.Add(widget.NewLabel(row[0]))
+                values.Add(widget.NewLabel(row[1]))
+</span>        }
 
-        <span class="cov0" title="0">versionTable.ShowHeaderRow = false
-        versionTable.ShowHeaderColumn = false
-        versionTable.StickyRowCount = len(data) - 1
-        versionTable.StickyColumnCount = len(data[0]) - 1
-        versionTable.HideSeparators = true
+        <span class="cov0" title="0">versionTable := container.NewHBox(description, values)
 </span>
         <span class="cov0" title="0">return versionTable</span>
 }
