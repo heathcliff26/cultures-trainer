@@ -13,6 +13,7 @@ Source:         %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires: golang >= 1.24
 BuildRequires: gcc libXcursor-devel libXrandr-devel mesa-libGL-devel libXi-devel libXinerama-devel libXxf86vm-devel libxkbcommon-devel wayland-devel
+BuildRequires: gettext-envsubst
 
 %global _description %{expand:
 This Trainer is for the german version of the game. Hence the german resource names. Currently only tested with Northland, should also work with 8th Wonder of the World.}
@@ -23,6 +24,7 @@ This Trainer is for the german version of the game. Hence the german resource na
 %autosetup -n cultures-trainer-%{version} -p1
 
 %build
+export RELEASE_VERSION="%{version}-%{release}"
 make build
 
 %install

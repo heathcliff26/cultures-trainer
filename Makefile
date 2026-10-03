@@ -2,8 +2,20 @@ SHELL := bash
 
 GO_LD_FLAGS ?= "-w -s"
 
-# Default target to build the project
-default: build
+# Build the binary
+build: fyne-metadata tools
+	"$(shell pwd)/bin/fyne" build -o "$(shell pwd)/bin/cultures-trainer" -release
+	mkdir -p dist && cp bin/cultures-trainer packages/cultures-trainer && tar -czf dist/cultures-trainer.tar.gz -C packages . && rm packages/cultures-trainer
+
+# Compile and run the trainer together with a simple test binary
+run: build
+	go build -o bin/Game.exe -ldflags="-s -w" tests/app/main.go
+	bin/cultures-trainer &
+	bin/Game.exe
+
+# Prepare the Fyne.toml for fyne
+fyne-metadata:
+	hack/fyne-metadata.sh
 
 # Run linter
 lint:
@@ -12,21 +24,6 @@ lint:
 # Run unit-tests
 test:
 	go test -v -timeout 300s -coverprofile=coverprofile.out -coverpkg "./pkg/..." ./...
-
-# Compile and run the trainer together with a simple test binary
-run: build
-	go build -o bin/Game.exe -ldflags="-s -w" tests/app/main.go
-	bin/cultures-trainer &
-	bin/Game.exe
-
-# Build the binary
-build: tools
-	"$(shell pwd)/bin/fyne" build -o "$(shell pwd)/bin/cultures-trainer" -release
-	mkdir -p dist && cp bin/cultures-trainer packages/cultures-trainer && tar -czf dist/cultures-trainer.tar.gz -C packages . && rm packages/cultures-trainer
-
-# Build the project for all supported platforms
-build-all:
-	hack/build-all.sh
 
 # Generate coverage profile
 coverprofile:
@@ -43,10 +40,6 @@ validate:
 # Validate the appstream metainfo file
 validate-metainfo:
 	appstreamcli validate io.github.heathcliff26.cultures-trainer.metainfo.xml
-
-# Generate assets for the project
-assets:
-	hack/generate-assets.sh
 
 # Update project dependencies
 update-deps:
@@ -86,15 +79,15 @@ help:
 	@echo "Run 'make <target>' to execute a specific target."
 
 .PHONY: \
-	default \
 	build \
-	test \
+	run \
+	fyne-metadata \
 	lint \
+	test \
 	coverprofile \
 	fmt \
 	validate \
 	validate-metainfo \
-	assets \
 	update-deps \
 	generate \
 	gosec \

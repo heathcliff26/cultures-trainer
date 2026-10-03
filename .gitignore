@@ -11,3 +11,7 @@ coverprofile.out
 /tmp
 /x86_64
 /aarch64
+
+# Ignore fyne build files
+fyne_metadata_init.go
+/FyneApp.toml
