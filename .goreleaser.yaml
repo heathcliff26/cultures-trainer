@@ -1,0 +1,67 @@
+---
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+project_name: cultures-trainer
+
+env:
+  - CGO_ENABLED=1
+
+builds:
+  - id: linux
+    goos:
+      - linux
+    goarch:
+      - amd64
+    tool: fyne-wrapper.sh
+    flags:
+      - --release
+
+archives:
+  - id: tar
+    ids:
+      - linux
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}-{{ tolower .Os }}-{{ .Arch }}"
+    files:
+      - strip_parent: true
+        src: "packages/*"
+nfpms:
+  - id: linux
+    package_name: "{{ .ProjectName }}"
+    file_name_template: "{{ .PackageName }}-linux-{{ .Arch }}"
+    ids:
+      - linux
+    maintainer: Heathcliff <heathcliff@heathcliff.eu>
+    description: |
+      This Trainer is for the german version of the game. Hence the german resource names.
+      Currently only tested with Northland, should also work with 8th Wonder of the World.
+    license: Apache-2.0
+    homepage: https://github.com/heathcliff26/{{ .ProjectName }}
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    contents:
+      - dst: /usr/share/licenses/{{ .PackageName }}
+        type: dir
+      - dst: /usr/share/doc/{{ .PackageName }}
+        type: dir
+      - src: LICENSE
+        dst: /usr/share/licenses/{{ .PackageName }}/LICENSE
+      - src: README.md
+        dst: /usr/share/doc/{{ .PackageName }}/README.md
+      - src: packages/io.github.heathcliff26.{{ .PackageName }}.desktop
+        dst: /usr/share/applications/io.github.heathcliff26.{{ .PackageName }}.desktop
+      - src: packages/io.github.heathcliff26.{{ .PackageName }}.png
+        dst: /usr/share/icons/hicolor/256x256/apps/io.github.heathcliff26.{{ .PackageName }}.png
+      - src: io.github.heathcliff26.{{ .PackageName }}.metainfo.xml
+        dst: /usr/share/metainfo/io.github.heathcliff26.{{ .PackageName }}.metainfo.xml
+    rpm:
+      summary: Resource Cheat Trainer for Cultures
+
+changelog:
+  disable: true
+release:
+  disable: true
