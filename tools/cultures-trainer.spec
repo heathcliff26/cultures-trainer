@@ -16,7 +16,8 @@ BuildRequires: gcc libXcursor-devel libXrandr-devel mesa-libGL-devel libXi-devel
 BuildRequires: gettext-envsubst
 
 %global _description %{expand:
-This Trainer is for the german version of the game. Hence the german resource names. Currently only tested with Northland, should also work with 8th Wonder of the World.}
+This Trainer is for the german version of the game. Hence the german resource names.
+Currently only tested with Northland, should also work with 8th Wonder of the World.}
 
 %description %{_description}
 

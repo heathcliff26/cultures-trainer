@@ -55,6 +55,6 @@ jobs:
       - lint
       - validate
     with:
-      artifact: "dist/cultures-trainer.tar.gz"
+      artifact: "dist/*"
       artifact-name: "cultures-trainer"
-      cmd: hack/containerized make build
+      cmd: make release

@@ -5,7 +5,6 @@ GO_LD_FLAGS ?= "-w -s"
 # Build the binary
 build: fyne-metadata tools
 	"$(shell pwd)/bin/fyne" build -o "$(shell pwd)/bin/cultures-trainer" -release
-	mkdir -p dist && cp bin/cultures-trainer packages/cultures-trainer && tar -czf dist/cultures-trainer.tar.gz -C packages . && rm packages/cultures-trainer
 
 # Compile and run the trainer together with a simple test binary
 run: build
@@ -16,6 +15,10 @@ run: build
 # Prepare the Fyne.toml for fyne
 fyne-metadata:
 	hack/fyne-metadata.sh
+
+# Build all artifacts used for release
+release: fyne-metadata
+	hack/containerized hack/release.sh
 
 # Run linter
 lint:
@@ -82,6 +85,7 @@ help:
 	build \
 	run \
 	fyne-metadata \
+	release \
 	lint \
 	test \
 	coverprofile \
