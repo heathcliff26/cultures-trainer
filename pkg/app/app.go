@@ -1,12 +1,15 @@
 package app
 
 import (
+	"embed"
 	"fmt"
+	"log/slog"
 
 	"fyne.io/fyne/v2"
 	fApp "fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/lang"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/heathcliff26/cultures-trainer/pkg/trainer"
@@ -16,6 +19,9 @@ const (
 	freezeButtonTextFreeze   = "Freeze"
 	freezeButtonTextUnfreeze = "Unfreeze"
 )
+
+//go:embed translations
+var translationsFS embed.FS
 
 // Used to change the new app function for testing
 var newApp = fApp.New
@@ -34,6 +40,11 @@ type App struct {
 }
 
 func New() *App {
+	err := lang.AddTranslationsFS(translationsFS, "translations")
+	if err != nil {
+		slog.Error("Failed to load translations", slog.Any("error", err))
+	}
+
 	app := newApp()
 	version := getVersion(app)
 	main := app.NewWindow(version.Name)
@@ -70,37 +81,46 @@ func (a *App) initContent() {
 		_, err := hexStringToUint64(s)
 		return err
 	}
-	storageAddressInput := container.NewVBox(widget.NewLabel(minimumLengthString("Storage Address", 20)), a.storageAddressEntry)
+	storageAddressInput := container.NewVBox(widget.NewLabel(minimumLengthString(lang.L("Storage Address"), 20)), a.storageAddressEntry)
 
-	storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) {
+	storageLocations := make([]string, len(trainer.StorageLocations))
+	for i, v := range trainer.StorageLocations {
+		storageLocations[i] = lang.L(v)
+	}
+	storageAddressTypeSelect := widget.NewSelect(storageLocations, func(s string) {
+		for i, v := range storageLocations {
+			if v == s {
+				s = trainer.StorageLocations[i]
+			}
+		}
 		offset := trainer.StorageIndexes[s]
 		// #nosec G115 -- The indexes are guaranteed to be positive.
 		a.storageAddressOffset = uint64(offset)
 	})
 	storageAddressTypeSelect.SetSelectedIndex(7)
-	storageAddressType := container.NewVBox(widget.NewLabel(minimumLengthString("Resource Name", 30)), storageAddressTypeSelect)
+	storageAddressType := container.NewVBox(widget.NewLabel(minimumLengthString(lang.L("Resource Name"), 30)), storageAddressTypeSelect)
 
-	startButton := widget.NewButton("Start Trainer", func() {})
+	startButton := widget.NewButton(lang.L("Start"), func() {})
 
 	setupBlock := container.NewHBox(storageAddressType, storageAddressInput)
 	setupBlock = container.NewVBox(setupBlock, startButton)
 
 	storageCategories := newBorder(container.NewHBox(
-		a.initStorageCategory("Nahrung", trainer.CategoryNahrung),
-		a.initStorageCategory("Bauwaren", trainer.CategoryBauwaren),
-		a.initStorageCategory("Resourcen", trainer.CategoryResourcen),
-		a.initStorageCategory("Waffen", trainer.CategoryWaffen),
-		a.initStorageCategory("Bonusgegenstände", trainer.CategoryBonus),
-		a.initStorageCategory("Sonstiges", trainer.CategorySonstiges),
+		a.initStorageCategory(lang.L("Nahrung"), trainer.CategoryNahrung),
+		a.initStorageCategory(lang.L("Bauwaren"), trainer.CategoryBauwaren),
+		a.initStorageCategory(lang.L("Resourcen"), trainer.CategoryResourcen),
+		a.initStorageCategory(lang.L("Waffen"), trainer.CategoryWaffen),
+		a.initStorageCategory(lang.L("Bonusgegenstände"), trainer.CategoryBonus),
+		a.initStorageCategory(lang.L("Sonstiges"), trainer.CategorySonstiges),
 	))
 
-	refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)
-	applyButton := widget.NewButton("Apply", a.applyStorageValues)
-	a.freezeButton = widget.NewButton(freezeButtonTextFreeze, a.freezeSelectedValues)
+	refreshButton := widget.NewButton(lang.L("Refresh"), a.refreshStorageValues)
+	applyButton := widget.NewButton(lang.L("Apply"), a.applyStorageValues)
+	a.freezeButton = widget.NewButton(lang.L(freezeButtonTextFreeze), a.freezeSelectedValues)
 
-	aboutButton := widget.NewButton("About", func() {
+	aboutButton := widget.NewButton(lang.L("About"), func() {
 		content := getVersionContent(a.version)
-		dialog.ShowCustom("About "+a.version.Name, "Close", content, a.main)
+		dialog.ShowCustom(lang.L("About")+" "+a.version.Name, lang.L("Close"), content, a.main)
 	})
 
 	runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
@@ -149,7 +169,7 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
 	})
 	for i, item := range items {
 		index := trainer.StorageIndexes[item]
-		a.resourceEntries[index] = NewInt32Entry(item)
+		a.resourceEntries[index] = NewInt32Entry(lang.L(item))
 		obj[i] = a.resourceEntries[index]
 	}
 	return container.NewVBox(container.NewHBox(categoryCheckbox, layout.NewSpacer(), categoryIncreaseButton, categoryDecreaseButton), newBorder(container.NewVBox(obj...)))
@@ -202,7 +222,7 @@ func (a *App) freezeSelectedValues() {
 	}
 	a.trainer.FreezeStorageValues(values)
 
-	a.freezeButton.Text = freezeButtonTextUnfreeze
+	a.freezeButton.Text = lang.L(freezeButtonTextUnfreeze)
 	a.freezeButton.OnTapped = a.unfreezeValues
 }
 
@@ -212,6 +232,6 @@ func (a *App) unfreezeValues() {
 	}
 	a.trainer.UnfreezeStorageValues()
 
-	a.freezeButton.Text = freezeButtonTextFreeze
+	a.freezeButton.Text = lang.L(freezeButtonTextFreeze)
 	a.freezeButton.OnTapped = a.freezeSelectedValues
 }
