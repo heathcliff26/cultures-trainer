@@ -84,12 +84,15 @@
 		<pre class="file" id="file0" style="display: none">package app
 
 import (
+        "embed"
         "fmt"
+        "log/slog"
 
         "fyne.io/fyne/v2"
         fApp "fyne.io/fyne/v2/app"
         "fyne.io/fyne/v2/container"
         "fyne.io/fyne/v2/dialog"
+        "fyne.io/fyne/v2/lang"
         "fyne.io/fyne/v2/layout"
         "fyne.io/fyne/v2/widget"
         "github.com/heathcliff26/cultures-trainer/pkg/trainer"
@@ -99,6 +102,9 @@ const (
         freezeButtonTextFreeze   = "Freeze"
         freezeButtonTextUnfreeze = "Unfreeze"
 )
+
+//go:embed translations
+var translationsFS embed.FS
 
 // Used to change the new app function for testing
 var newApp = fApp.New
@@ -117,6 +123,11 @@ type App struct {
 }
 
 func New() *App {
+        <span class="cov0" title="0">err := lang.AddTranslationsFS(translationsFS, "translations")
+        if err != nil </span>{
+                <span class="cov0" title="0">slog.Error("Failed to load translations", slog.Any("error", err))
+</span>        }
+
         <span class="cov0" title="0">app := newApp()
         version := getVersion(app)
         main := app.NewWindow(version.Name)
@@ -134,8 +145,8 @@ func New() *App {
         a.main.SetFixedSize(true)
         a.main.Resize(fyne.NewSquareSize(400))
         a.main.Show()
-        return a
-</span>}
+        return a</span>
+}
 
 // Simply calls app.Run
 func (a *App) Run() {
@@ -153,37 +164,46 @@ func (a *App) initContent() {
                 <span class="cov0" title="0">_, err := hexStringToUint64(s)
                 return err
 </span>        }
-        <span class="cov0" title="0">storageAddressInput := container.NewVBox(widget.NewLabel(minimumLengthString("Storage Address", 20)), a.storageAddressEntry)
+        <span class="cov0" title="0">storageAddressInput := container.NewVBox(widget.NewLabel(minimumLengthString(lang.L("Storage Address"), 20)), a.storageAddressEntry)
 </span>
-        <span class="cov0" title="0">storageAddressTypeSelect := widget.NewSelect(trainer.StorageLocations, func(s string) </span>{
+        <span class="cov0" title="0">storageLocations := make([]string, len(trainer.StorageLocations))
+        for i, v := range trainer.StorageLocations </span>{
+                <span class="cov0" title="0">storageLocations[i] = lang.L(v)
+</span>        }
+        <span class="cov0" title="0">storageAddressTypeSelect := widget.NewSelect(storageLocations, func(s string) </span>{
+                <span class="cov0" title="0">for i, v := range storageLocations </span>{
+                        <span class="cov0" title="0">if v == s </span>{
+                                <span class="cov0" title="0">s = trainer.StorageLocations[i]
+</span>                        }
+                }
                 <span class="cov0" title="0">offset := trainer.StorageIndexes[s]
 </span>                // #nosec G115 -- The indexes are guaranteed to be positive.
-                <span class="cov0" title="0">a.storageAddressOffset = uint64(offset)
-</span>        })
+                <span class="cov0" title="0">a.storageAddressOffset = uint64(offset)</span>
+        })
         <span class="cov0" title="0">storageAddressTypeSelect.SetSelectedIndex(7)
-        storageAddressType := container.NewVBox(widget.NewLabel(minimumLengthString("Resource Name", 30)), storageAddressTypeSelect)
+        storageAddressType := container.NewVBox(widget.NewLabel(minimumLengthString(lang.L("Resource Name"), 30)), storageAddressTypeSelect)
 </span>
-        <span class="cov0" title="0">startButton := widget.NewButton("Start Trainer", func() </span>{<span class="cov0" title="0"></span>})
+        <span class="cov0" title="0">startButton := widget.NewButton(lang.L("Start"), func() </span>{<span class="cov0" title="0"></span>})
 
         <span class="cov0" title="0">setupBlock := container.NewHBox(storageAddressType, storageAddressInput)
         setupBlock = container.NewVBox(setupBlock, startButton)
 </span>
         <span class="cov0" title="0">storageCategories := newBorder(container.NewHBox(
-                a.initStorageCategory("Nahrung", trainer.CategoryNahrung),
-                a.initStorageCategory("Bauwaren", trainer.CategoryBauwaren),
-                a.initStorageCategory("Resourcen", trainer.CategoryResourcen),
-                a.initStorageCategory("Waffen", trainer.CategoryWaffen),
-                a.initStorageCategory("Bonusgegenstände", trainer.CategoryBonus),
-                a.initStorageCategory("Sonstiges", trainer.CategorySonstiges),
+                a.initStorageCategory(lang.L("Nahrung"), trainer.CategoryNahrung),
+                a.initStorageCategory(lang.L("Bauwaren"), trainer.CategoryBauwaren),
+                a.initStorageCategory(lang.L("Resourcen"), trainer.CategoryResourcen),
+                a.initStorageCategory(lang.L("Waffen"), trainer.CategoryWaffen),
+                a.initStorageCategory(lang.L("Bonusgegenstände"), trainer.CategoryBonus),
+                a.initStorageCategory(lang.L("Sonstiges"), trainer.CategorySonstiges),
         ))
 </span>
-        <span class="cov0" title="0">refreshButton := widget.NewButton("Refresh", a.refreshStorageValues)
-        applyButton := widget.NewButton("Apply", a.applyStorageValues)
-        a.freezeButton = widget.NewButton(freezeButtonTextFreeze, a.freezeSelectedValues)
+        <span class="cov0" title="0">refreshButton := widget.NewButton(lang.L("Refresh"), a.refreshStorageValues)
+        applyButton := widget.NewButton(lang.L("Apply"), a.applyStorageValues)
+        a.freezeButton = widget.NewButton(lang.L(freezeButtonTextFreeze), a.freezeSelectedValues)
 </span>
-        <span class="cov0" title="0">aboutButton := widget.NewButton("About", func() </span>{
+        <span class="cov0" title="0">aboutButton := widget.NewButton(lang.L("About"), func() </span>{
                 <span class="cov0" title="0">content := getVersionContent(a.version)
-                dialog.ShowCustom("About "+a.version.Name, "Close", content, a.main)
+                dialog.ShowCustom(lang.L("About")+" "+a.version.Name, lang.L("Close"), content, a.main)
 </span>        })
 
         <span class="cov0" title="0">runBlock := container.NewVBox(storageCategories, container.NewHBox(applyButton, refreshButton, a.freezeButton, layout.NewSpacer(), aboutButton))
@@ -232,7 +252,7 @@ func (a *App) initStorageCategory(name string, items []string) fyne.CanvasObject
         })
         <span class="cov0" title="0">for i, item := range items </span>{
                 <span class="cov0" title="0">index := trainer.StorageIndexes[item]
-                a.resourceEntries[index] = NewInt32Entry(item)
+                a.resourceEntries[index] = NewInt32Entry(lang.L(item))
                 obj[i] = a.resourceEntries[index]
 </span>        }
         <span class="cov0" title="0">return container.NewVBox(container.NewHBox(categoryCheckbox, layout.NewSpacer(), categoryIncreaseButton, categoryDecreaseButton), newBorder(container.NewVBox(obj...)))</span>
@@ -285,7 +305,7 @@ func (a *App) freezeSelectedValues() {
 </span>        }
         <span class="cov0" title="0">a.trainer.FreezeStorageValues(values)
 </span>
-        <span class="cov0" title="0">a.freezeButton.Text = freezeButtonTextUnfreeze
+        <span class="cov0" title="0">a.freezeButton.Text = lang.L(freezeButtonTextUnfreeze)
         a.freezeButton.OnTapped = a.unfreezeValues</span>
 }
 
@@ -295,7 +315,7 @@ func (a *App) unfreezeValues() {
 </span>        }
         <span class="cov0" title="0">a.trainer.UnfreezeStorageValues()
 </span>
-        <span class="cov0" title="0">a.freezeButton.Text = freezeButtonTextFreeze
+        <span class="cov0" title="0">a.freezeButton.Text = lang.L(freezeButtonTextFreeze)
         a.freezeButton.OnTapped = a.freezeSelectedValues</span>
 }
 </pre>
