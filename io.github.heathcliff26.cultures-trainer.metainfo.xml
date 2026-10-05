@@ -1,56 +1,138 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <component type="desktop-application">
-    <id>io.github.heathcliff26.cultures-trainer</id>
-
-    <name>Cultures Trainer</name>
-    <summary>Resource Cheat Trainer for Cultures</summary>
-
-    <metadata_license>MIT</metadata_license>
-    <project_license>Apache-2.0</project_license>
-
-    <description>
-        <p>This Trainer is for the german version of the game. Hence the german resource names. Currently only tested with Northland, should also work with 8th Wonder of the World.</p>
-    </description>
-
-    <url type="homepage">https://github.com/heathcliff26/cultures-trainer</url>
-    <developer id="io.github.heathcliff26">
-        <name>Heathcliff</name>
-    </developer>
-
-    <content_rating type="oars-1.1" />
-
-    <launchable type="desktop-id">io.github.heathcliff26.cultures-trainer.desktop</launchable>
-
-    <branding>
-        <color type="primary" scheme_preference="light">#023c8a</color>
-        <color type="primary" scheme_preference="dark">#03228a</color>
-    </branding>
-
-    <screenshots>
-        <screenshot type="default">
-            <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/main-window-dark.png
-            </image>
-            <caption>Main Window (Dark Theme)</caption>
-        </screenshot>
-        <screenshot type="default">
-            <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/main-window-light.png
-            </image>
-            <caption>Main Window (Light Theme)</caption>
-        </screenshot>
-        <screenshot>
-            <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/setup-window-dark.png
-            </image>
-            <caption>Setup Window (Dark Theme)</caption>
-        </screenshot>
-        <screenshot>
-            <image type="source">
-                https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/setup-window-light.png
-            </image>
-            <caption>Setup Window (Light Theme)</caption>
-        </screenshot>
-    </screenshots>
-
+  <id>io.github.heathcliff26.cultures-trainer</id>
+  <name>Cultures Trainer</name>
+  <summary>Resource Cheat Trainer for Cultures</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  <description>
+    <p>This Trainer is for the german version of the game. Hence the german resource names. Currently only tested with Northland, should also work with 8th Wonder of the World.</p>
+  </description>
+  <developer id="io.github.heathcliff26">
+    <name>Heathcliff</name>
+  </developer>
+  <launchable type="desktop-id">io.github.heathcliff26.cultures-trainer.desktop</launchable>
+  <url type="homepage">https://github.com/heathcliff26/cultures-trainer</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Main Window (Dark Theme)</caption>
+      <image type="source">https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/main-window-dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Main Window (Light Theme)</caption>
+      <image type="source">https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/main-window-light.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Setup Window (Dark Theme)</caption>
+      <image type="source">https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/setup-window-dark.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Setup Window (Light Theme)</caption>
+      <image type="source">https://raw.githubusercontent.com/heathcliff26/cultures-trainer/refs/tags/v0.3.0/images/setup-window-light.png</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#023c8a</color>
+    <color type="primary" scheme_preference="dark">#03228a</color>
+  </branding>
+  <releases>
+    <release type="stable" version="v0.3.0" date="2026-10-05T00:00:00Z">
+      <description>
+        <p>This release adds the following features:</p>
+        <ul>
+          <li>*(ci)* Dynamically inject version from git</li>
+          <li>Use goreleaser to build rpm package</li>
+          <li>Add english translation</li>
+          <li>🐛 Bug Fixes:</li>
+          <li>Fit version inside about dialog</li>
+        </ul>
+        <p>This release updates documentation:</p>
+        <ul>
+          <li>Update screenshots url in metainfo</li>
+          <li>⚙️ Miscellaneous Tasks:</li>
+          <li>Add new changelog workflow</li>
+          <li>Enforce conventional commits</li>
+          <li>*(builder)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202609301715</li>
+        </ul>
+      </description>
+    </release>
+    <release type="stable" version="v0.2.2" date="2026-09-27T00:00:00Z">
+      <description>
+        <p>This release adds the following features:</p>
+        <ul>
+          <li>*(container)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202609241228</li>
+          <li>💼 Other:</li>
+          <li>Fix coverprofiles permissions</li>
+          <li>Adapt border color to new fyne design</li>
+        </ul>
+      </description>
+    </release>
+    <release type="stable" version="v0.2.1" date="2026-09-12T00:00:00Z">
+      <description>
+        <p>This release adds the following features:</p>
+        <ul>
+          <li>*(container)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202608240459</li>
+          <li>*(container)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202608261637</li>
+          <li>*(container)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202608261947</li>
+          <li>*(container)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202609060502</li>
+          <li>🐛 Bug Fixes:</li>
+          <li>*(deps)* Update module fyne.io/fyne/v2 to v2.8.1</li>
+          <li>*(deps)* Update module golang.org/x/sys to v0.48.0</li>
+        </ul>
+      </description>
+    </release>
+    <release type="stable" version="v0.2.0" date="2026-08-23T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update gomod</p>
+        <p>💼 Other:</p>
+        <p>Switch to containerized script</p>
+        <p>Use newer golang version</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.5" date="2026-06-12T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update gomod</p>
+        <p>💼 Other:</p>
+        <p>Move renovate and Link Check to tekton</p>
+        <p>Remove obsolete Renovate status badge</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.4" date="2026-06-01T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update gomod</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.3" date="2026-05-01T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update gomod</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.2" date="2026-03-31T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update module golang.org/x/sys to v0.42.0</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.1" date="2026-03-01T00:00:00Z">
+      <description>
+        <p>🐛 Bug Fixes:</p>
+        <p>*(deps)* Update gomod</p>
+        <p>💼 Other:</p>
+        <p>Add an about button to display version information</p>
+        <p>Remove unneeded prepare step in renovate workflow</p>
+      </description>
+    </release>
+    <release type="stable" version="v0.1.0" date="2026-01-20T00:00:00Z">
+      <description>
+        <p>💼 Other:</p>
+        <p>Refactor entry widgets to natively use int32</p>
+        <p>Reformat code to remove gosec warnings</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1"/>
 </component>
