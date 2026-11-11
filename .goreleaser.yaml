@@ -58,6 +58,12 @@ nfpms:
         dst: /usr/share/icons/hicolor/256x256/apps/io.github.heathcliff26.{{ .PackageName }}.png
       - src: io.github.heathcliff26.{{ .PackageName }}.metainfo.xml
         dst: /usr/share/metainfo/io.github.heathcliff26.{{ .PackageName }}.metainfo.xml
+    overrides:
+      rpm:
+        dependencies:
+          - glibc
+          - libglvnd-glx
+          - libwayland-client
     rpm:
       summary: Resource Cheat Trainer for Cultures
 
