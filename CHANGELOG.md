@@ -1,5 +1,24 @@
 # Changelog
 
+Version v0.3.1
+--------------------
+Released: 2026-11-12
+
+🐛 Bug Fixes:
+- *(deps)* Update module golang.org/x/sys to v0.49.0
+- *(deps)* Update module fyne.io/fyne/v2 to v2.8.2
+- Add library dependencies to rpm
+- *(deps)* Update gomod
+
+⚙️ Miscellaneous Tasks:
+- *(builder)* Update image ghcr.io/heathcliff26/go-fyne-ci to v202610090432
+- Synced file(s) with heathcliff26/ci
+- Synced file(s) with heathcliff26/ci
+- Synced file(s) with heathcliff26/ci
+- Synced file(s) with heathcliff26/ci
+- *(ci)* Remove gemfury job
+- *(builder)* Update image ghcr.io/heathcliff26/go-fyne-ci to v202611110607
+
 Version v0.3.0
 --------------------
 Released: 2026-10-05
@@ -19,6 +38,7 @@ Released: 2026-10-05
 - Add new changelog workflow
 - Enforce conventional commits
 - *(builder)* [**breaking**] Update image ghcr.io/heathcliff26/go-fyne-ci to v202609301715
+- *(release)* Update changelog for v0.3.0
 
 Version v0.2.2
 --------------------
